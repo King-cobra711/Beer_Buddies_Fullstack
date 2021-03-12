@@ -1,0 +1,80 @@
+.leaderBoardList {
+  width: 100%;
+  display: flex;
+  padding: 0;
+  margin: 0em;
+  margin-top: 0;
+}
+.leaderBoardList > li {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex-grow: 1;
+  font-size: 2em;
+  border: solid black;
+  box-sizing: border-box;
+}
+table {
+  color: white;
+}
+td {
+  border: white dotted 1px;
+  font-size: 18px;
+}
+.row {
+  border: 1px solid rgb(0, 0, 15);
+  display: flex;
+  flex: 1;
+}
+
+.Display {
+  width: 100%;
+  height: calc(100vh - 145px);
+  flex-direction: column;
+  align-items: center;
+  /* border-left: 3px rgb(255, 255, 24) solid; */
+  background-color: rgba(0, 0, 0, 0.726);
+  margin: auto;
+  box-sizing: border-box;
+}
+
+.Display button {
+  width: 100%;
+  margin: 0;
+  font-size: 0.5em;
+  font-family: "DotGothic16", sans-serif;
+}
+.selectedButton {
+  border: none;
+  background-color: black;
+  color: white;
+  width: 100%;
+  margin: 0px;
+  font-size: 1em;
+  font-family: "DotGothic16", sans-serif;
+}
+.unSelectedButton {
+  border: black solid;
+  background-color: white;
+  color: black;
+  width: 100%;
+  margin: 0px;
+  font-size: 1em;
+  font-family: "DotGothic16", sans-serif;
+}
+@media screen and (max-width: 370px) {
+  .Display button {
+    font-size: 0.7em;
+  }
+  .Display a {
+    font-size: 0.7em;
+  }
+}
+
+/* leaderboard content */
+.NotActiveContent {
+  display: none;
+}
+.ActiveContent {
+  display: table;
+}

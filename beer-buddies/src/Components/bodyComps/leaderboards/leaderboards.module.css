@@ -1,0 +1,107 @@
+.paraFix * p {
+  margin: 0;
+  color: white;
+}
+.outer {
+  display: flex;
+  height: 300px;
+  flex-direction: column;
+  width: 90%;
+  margin: auto;
+}
+.leaderBoardList {
+  width: 100%;
+  display: flex;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+.leaderBoardList > li {
+  list-style: none;
+  padding: 0;
+  flex-grow: 1;
+  border: solid black;
+}
+table {
+  color: white;
+  font-size: 1em;
+}
+td {
+  border: white dotted 1px;
+}
+.row {
+  border: 1px solid rgb(0, 0, 15);
+  display: flex;
+  flex: 1;
+}
+
+.item {
+  background-color: rgb(235, 173, 5);
+  border: 1px solid rgb(0, 0, 0);
+  flex: 1;
+}
+button {
+  width: 80%;
+  margin: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-family: "DotGothic16", sans-serif;
+}
+
+.Display {
+  width: 100%;
+  height: calc(100vh - 145px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-right: 3px rgb(255, 255, 24) solid;
+  background-color: rgba(0, 0, 0, 0.726);
+  margin: auto;
+  box-sizing: border-box;
+  overflow: scroll;
+}
+.DisplayContainer {
+  width: 100%;
+  height: calc(100vh - 145px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 3px rgb(255, 255, 24) solid;
+  background-color: rgba(0, 0, 0, 0.726);
+  margin: auto;
+  box-sizing: border-box;
+  overflow: scroll;
+}
+.Display button {
+  width: 80%;
+  margin: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-size: 0.9em;
+  font-family: "DotGothic16", sans-serif;
+}
+.Display a {
+  width: 80%;
+  margin: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-size: 0.9em;
+  font-family: "DotGothic16", sans-serif;
+}
+@media screen and (max-width: 370px) {
+  .Display button {
+    font-size: 0.7em;
+  }
+  .Display a {
+    font-size: 0.7em;
+  }
+}
+
+/* leaderboard content */
+.NotActiveContent {
+  display: none;
+}
+.ActiveContent {
+  display: block;
+}

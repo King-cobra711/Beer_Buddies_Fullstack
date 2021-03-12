@@ -1,0 +1,14 @@
+.timerContainer {
+  display: flex;
+  color: white;
+  align-items: center;
+}
+.reset {
+  border-radius: 1em;
+  background-color: white;
+  color: black;
+  width: 100%;
+  margin: 0px;
+  padding: 1em;
+  font-family: "DotGothic16", sans-serif;
+}
