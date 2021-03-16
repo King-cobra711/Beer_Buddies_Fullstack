@@ -33,6 +33,11 @@ body {
   font-size: 1.2em;
   font-family: "DotGothic16", sans-serif;
 }
+.errorMessage {
+  color: rgb(255, 251, 0);
+  font-size: 1em;
+  margin: 4px;
+}
 @media screen and (min-width: 350px) {
   .Display button {
     font-size: 1.1em;

@@ -34,8 +34,8 @@ body {
   font-family: "DotGothic16", sans-serif;
 }
 .errorMessage {
-  color: red;
-  font-size: 0.9em;
+  color: rgb(255, 251, 0);
+  font-size: 1em;
   margin: 4px;
 }
 @media screen and (min-width: 388px) {
