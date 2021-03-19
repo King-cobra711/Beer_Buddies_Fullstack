@@ -31,23 +31,10 @@ return (
             'Content-type': 'application/json'
         },
         body: JSON.stringify(fields)
-    }).then((res) => {
-        return res.json();
-    }).then((data) => {
-            console.log(data);
-            if(data.emailExists && data.userExists){
-            setEmailExists(data.emailExists);
-            setUserExists(data.userExists);
-            }
-            else if(data.emailExists){
-            setEmailExists(data.emailExists);
-            setUserExists('');
-            }
-            else if(data.userExists){
-            setUserExists(data.userExists);
-            setEmailExists('');
-        }else if(data.RegConfirmed){
-            console.log(data.RegConfirmed);
+    })
+    .then((res)=> {
+        console.log(res.status);
+        if(res.status === 200){
             fetch('http://localhost:3001/register', {
             method: 'POST',
             headers: {
@@ -62,8 +49,25 @@ return (
             setUserExists('');
             setEmailExists('');
         }
-            }).catch(error => console.log(error))
-    .catch(error => console.log(error))
+        else if(res.status === 409){
+            return res.json().then((data) => {
+            console.log(data)
+            if(data.email && data.user){
+            setEmailExists(data.email);
+            setUserExists(data.user);
+            }
+            else if(data.email){
+            setEmailExists(data.email);
+            setUserExists("");
+            }
+            else if(data.user){
+            setUserExists(data.user);
+            setEmailExists('');
+            }else{
+                return null;
+            }
+            }).catch(error => console.log(error));}
+    })
         }}>
             <Form
             className={classes.Display}

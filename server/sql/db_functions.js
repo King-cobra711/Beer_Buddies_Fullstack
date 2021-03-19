@@ -17,7 +17,7 @@ const db = mysql.createPool({
 
 // POST
 
-const checkRegistrationDetails = (req, res) => {
+const checkRegistrationDetails = (req, status) => {
     const Email = req.body.Email;
     const Username = req.body.Username;
 
@@ -28,26 +28,19 @@ const checkRegistrationDetails = (req, res) => {
             console.log(err);
         }
         if(result[0].length > 0 && result[1].length > 0){
-            
-            res.send({
-            userExists: 'User already exists',
-            emailExists: 'Email already in use',
-        }) ;
-            console.log(result);
+            status(400)
             return;
         }
         if(result[0].length > 0){
-            res.send({userExists: 'User already exists'}) ;
-            console.log(result);
+            status(406)
             return;
         }
         if(result[1].length > 0){
-            console.log(result[1])
-            res.send({emailExists: 'Email already in use'});
+            status(409)
             return;
         }
         else{
-            res.send({RegConfirmed: true});
+            status(200)
             return;
         }
     });
@@ -57,7 +50,7 @@ const registerUser = (req, res) => {
     const Username = req.body.Username;
     const Password = req.body.Password;
 
-    const RegisterUser = "INSERT INTO User (User_Email, User_Name, User_Password) VALUES (?, ?, ?);"
+    const RegisterUser = "INSERT INTO User (User_Email, User_Name, User_Password, User_Date_Joined) VALUES (?, ?, ?, CURRENT_DATE);"
 
     bcrypt.hash(Password, saltRounds, (err, hash)=>{
         if(err){
@@ -72,12 +65,15 @@ const registerUser = (req, res) => {
     });
 }
 
-const Login = (req, res) => {
+const Login = (req, status) => {
     const userName = req.body.Username;
     const password = req.body.Password;
 
-    const loginUser = "SELECT User_Name, User_Password FROM User WHERE User_Name = ?"
-    db.query(loginUser, [userName], (err, result)=>{
+    const checkDetails = "SELECT User_Name, User_Password FROM User WHERE User_Name = ?"
+
+    const login = "SELECT User_ID, User_Name, DATE_FORMAT(User_Date_Joined, '%d/%m/%Y') AS 'User_Date_Joined', User_Bio, User_Picture, User_Theme, User_Blacklist_Status FROM User WHERE User_Name = ?"
+
+    db.query(checkDetails, [userName], (err, result)=>{
         console.log(err)
         console.log(result)
         if(err){
@@ -86,14 +82,22 @@ const Login = (req, res) => {
         if(result.length > 0){
         bcrypt.compare(password, result[0].User_Password, (err, response)=>{
             if(response){
-                res.send(result)
-            }else{
-                res.send({message: 'Incorrect username and/or email'})
-            }
-        })
+                db.query(login, [userName], (err,userDetails)=>{
+                    if(err){
+                        console.log(err);
+                    }
+                    if(userDetails.length > 0){
+                        status([200, userDetails])
+                    }
+                })
             }
             else{
-                res.send({message: "User does not exist"});
+                status([406])
+            }
+    })
+            }
+            else{
+                status([404])
             }
 
     })

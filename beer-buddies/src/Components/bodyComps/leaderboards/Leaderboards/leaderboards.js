@@ -8,7 +8,6 @@ import classes from './leaderboard.module.css';
 const Leaderboard = () => {
   const [allScores, setAllScores] = useState([]);
   const [loaded, setLoaded] = useState(false);
-;
   const [toggleState, setToggleState] = useState(1);
 
   useEffect( () => {

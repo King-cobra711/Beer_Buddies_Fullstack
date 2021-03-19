@@ -5,12 +5,42 @@ import {Formik, Field, Form, ErrorMessage} from "formik";
 import Aux from '../../../hoc/aux';
 import classes from './login.module.css';
 import * as Mui from '@material-ui/core';
+import { Redirect } from 'react-router';
+import { useHistory } from "react-router-dom";
 
 const Login = () => {
+let history = useHistory();
 
     const [loginStatus, setLoginStatus] = useState(false);
     const [loginMessage, setLoginMessage] = useState('');
     const [welcomeMessage, setWelcomeMessage] = useState('');
+
+    useEffect(() => {
+        fetch('http://localhost:3001/login', {
+        method: 'GET',
+        headers: {
+            'Content-type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify()
+    }).catch(error => console.log(error)).then((res)=>{
+        console.log(res);
+        if(res.status === 200){
+            res.json().then((data)=>{
+                // console.log(data.User[0])
+            })
+        }
+        else if(res.status === 401){
+            res.json().then((data)=>{
+                // console.log(data)
+            })
+        }else{
+            res.json().then((data)=>{
+                // console.log(data)
+            })
+        }
+        }).catch(error => console.log(error))
+    }, [])
 
     return (
     <Aux>
@@ -26,25 +56,28 @@ const Login = () => {
         headers: {
             'Content-type': 'application/json'
         },
-        body: JSON.stringify(fields)
-        }).then((res) => {
-            return res.json();
+        credentials: 'include',
+        body: JSON.stringify(fields),
         })
-        .then((data) => {
-            console.log(data)
-            if(data.message){
-            setLoginMessage(data.message);
-            setLoginStatus(false);
-            setWelcomeMessage('');
-        }
-        else{
-            setLoginMessage('');
-            setLoginStatus(true);
-            setWelcomeMessage("Welcome " + data[0].User_Name);
-            console.log(welcomeMessage);
-        }
-        })
-        .catch(error => console.log(error))
+        .then((res) => {
+            if(res.status === 200){
+                res.json().then((data)=>{
+                    console.log(data)
+                    console.log("on submit");
+                    history.push('/');
+                })
+            }
+            else if(res.status === 406 || res.status === 404){
+                return res.json().then((data)=>{
+                    setLoginMessage(data.message);
+                    setLoginStatus(false);
+                    setWelcomeMessage('');
+                })
+            }else{
+                return null;
+            }
+            
+        }).catch(error => console.log(error))
         }}>
             <Form
             className={classes.Display}
@@ -73,7 +106,7 @@ const Login = () => {
                     color = "default" 
                     size = "medium"
                     type="submit"
-                    // href='/'
+                    // href='/login'
                 >LOGIN</Mui.Button>
                 <Mui.Button 
                     style={{fontFamily:'DotGothic16', fontSize:'1em'}}

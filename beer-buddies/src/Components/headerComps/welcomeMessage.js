@@ -13,6 +13,23 @@ const WelcomeMessage = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const Logout = () => {
+  fetch('http://localhost:3001/logout', {
+        method: 'GET',
+        headers: {
+            'Content-type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify(),
+        }).then((res)=>{
+          console.log(res);
+          res.json().then((data)=>{
+          console.log(data);
+        })
+        }).catch(error => console.log(error));
+  }
+
     return (
     <div className={classes.MessageBox}>
     <Mui.Grid container spacing={1}>
@@ -33,7 +50,9 @@ const WelcomeMessage = () => {
         <Mui.MenuItem 
         component={Link} to='/usercard'
         onClick={handleClose}>Edit Profile</Mui.MenuItem>
-        <Mui.MenuItem onClick={handleClose}>Logout</Mui.MenuItem>
+        <Mui.MenuItem 
+        onClick={handleClose && Logout}
+        >Logout</Mui.MenuItem>
         <Mui.MenuItem onClick={handleClose} style={{borderTop:"grey solid"}}>Admin</Mui.MenuItem>
       </Mui.Menu>
         </Mui.Grid>
