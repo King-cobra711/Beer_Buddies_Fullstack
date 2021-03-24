@@ -101,6 +101,15 @@ app.post("/userScores", (req, res) => {
     }
   });
 });
+app.post("/UpdateEasyScore", (req, res) => {
+  db.newEasyScore(req, (newScore) => {
+    if (newScore === 400) {
+      res.status(200).send({ message: "Better luck next time" });
+    } else {
+      res.status(200).send({ message: "New Best Score!" });
+    }
+  });
+});
 
 app.listen(3001, () => {
   console.log("running on port 3001");

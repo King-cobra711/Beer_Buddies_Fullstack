@@ -35,6 +35,25 @@ button {
   font-size: 0.9em;
   font-family: "DotGothic16", sans-serif;
 }
+.modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.582);
+  color: black;
+  text-align: center;
+}
+.modalMessage {
+  padding: 10px;
+  margin: 5px;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.726);
+  color: white;
+}
+.modalMessage > p {
+  margin: 0;
+}
 @media screen and (max-width: 370px) {
   .Display button {
     font-size: 0.7em;

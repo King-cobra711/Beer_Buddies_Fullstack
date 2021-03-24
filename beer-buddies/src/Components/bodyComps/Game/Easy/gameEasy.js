@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import initialiseDeck from "./Deck/deck";
 import Board from "./Board/board";
 import * as Mui from "@material-ui/core";
+import User from "../../../../hoc/user";
 
 import classes from "./gameEasy.module.css";
 
@@ -18,6 +19,48 @@ const Easy = () => {
   const [endGame, setEndGame] = useState(1);
   const [begin, setBegin] = useState(false);
   const [shuffle, setShuffle] = useState(false);
+  const [score, setScore] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  let PlayerID = User()[0].User_ID;
+
+  useEffect(() => {
+    if (gameOver) {
+      if (typeof PlayerID !== "undefined") {
+        async function fetchAPI() {
+          const request = await fetch("http://localhost:3001/UpdateEasyScore", {
+            method: "POST",
+            credentials: "include",
+            headers: {
+              "Content-type": "application/json",
+            },
+            body: JSON.stringify({ id: PlayerID, score: score }),
+          }).then((res) => {
+            if (res.status === 200) {
+              res.json().then((data) => {
+                console.log(data);
+                setMessage(data.message);
+              });
+            } else {
+              console.log("ERROR");
+            }
+          });
+          return request;
+        }
+        fetchAPI();
+      }
+    }
+  }, [gameOver]);
 
   useEffect(() => {
     resizedBoard();
@@ -42,14 +85,15 @@ const Easy = () => {
       if (isMatch(id)) {
         setSolved([...solved, flipped[0], id]);
         setEndGame(endGame + 1);
-        console.log(endGame);
         resetCards();
       } else {
         setTimeout(resetCards, 2000);
       }
       if (endGame === 3) {
+        setGameOver(true);
         setStarted(false);
         setShuffle(false);
+        handleOpen();
       }
     }
   };
@@ -78,6 +122,26 @@ const Easy = () => {
 
   return (
     <div>
+      <Mui.Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={classes.modal}
+        open={open}
+        onClose={handleClose}
+        closeAfterTransition
+      >
+        <Mui.Fade in={open}>
+          <div className={classes.modalMessage}>
+            <Mui.Grid container spacing={0}>
+              <Mui.Grid item xs={12}>
+                <h1>
+                  {message ? `Your score was ${score} . ${message}!` : null}
+                </h1>
+              </Mui.Grid>
+            </Mui.Grid>
+          </div>
+        </Mui.Fade>
+      </Mui.Modal>
       <ul className={classes.Display}>
         <li>
           <Mui.Button
@@ -100,6 +164,8 @@ const Easy = () => {
             started={started}
             isStarted={setStarted}
             begin={setBegin}
+            setScore={setScore}
+            setGameOver={setGameOver}
           />
         </li>
       </ul>

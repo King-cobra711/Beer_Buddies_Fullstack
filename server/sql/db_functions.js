@@ -106,6 +106,39 @@ const Login = (req, logstat) => {
   });
 };
 
+const newEasyScore = (req, newScore) => {
+  const score = req.body.score;
+  const id = req.body.id;
+  console.log(score);
+
+  const check =
+    "SELECT Best_Score FROM Leaderboards WHERE Game_ID = 1 AND User_ID = ?";
+
+  const insert =
+    "UPDATE Leaderboards SET Best_Score = ?, Score_Date = CURRENT_DATE WHERE (User_ID = ? AND Game_ID = 1)";
+
+  db.query(check, [id], (err, res) => {
+    if (err) {
+      console.log(err);
+    }
+    if (res[0].Best_Sore >= score) {
+      db.query(insert, [score, id], (error, response) => {
+        if (error) {
+          console.log(error);
+        }
+        if (response) {
+          newScore(200);
+        }
+      });
+    }
+    if (res[0].Best_Score < score) {
+      newScore(400);
+    } else {
+      console.log("ERROR");
+    }
+  });
+};
+
 // GET
 
 const scores = (res) => {
@@ -142,4 +175,5 @@ module.exports = {
   scores: scores,
   Login: Login,
   userScores: userScores,
+  newEasyScore: newEasyScore,
 };
