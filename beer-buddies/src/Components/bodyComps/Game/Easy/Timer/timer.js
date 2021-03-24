@@ -45,10 +45,6 @@ export default function Timer({ setSolved, setDisabled, setEndGame,setFlipped, s
 
   return (
     <div className={classes.timerContainer}>
-      
-        {/* <button className={`button button-primary button-primary-${isActive ? 'active' : 'inactive'}`} onClick={toggle}>
-          {isActive ? 'Pause' : 'Start'}
-        </button> */}
         <Mui.Button 
       variant = "contained" 
       color = "default" 

@@ -1,16 +1,13 @@
-import React from 'react';
+import React from "react";
 
-import WelcomeMessage from '../Components/headerComps/welcomeMessage';
+import classes from "./header.module.css";
 
-import classes from './header.module.css';
-
-const header = () => {
-    return (
+const Header = () => {
+  return (
     <div className={classes.MainContainer}>
-    <div className={classes.Background}></div>
-    <WelcomeMessage/>
+      <div className={classes.Background}></div>
     </div>
-    )
-}
+  );
+};
 
-export default header;
+export default Header;
