@@ -121,7 +121,7 @@ const newEasyScore = (req, newScore) => {
     if (err) {
       console.log(err);
     }
-    if (res[0].Best_Sore >= score) {
+    if (res[0].Best_Score > score) {
       db.query(insert, [score, id], (error, response) => {
         if (error) {
           console.log(error);
@@ -131,7 +131,7 @@ const newEasyScore = (req, newScore) => {
         }
       });
     }
-    if (res[0].Best_Score < score) {
+    if (res[0].Best_Score <= score) {
       newScore(400);
     } else {
       console.log("ERROR");
