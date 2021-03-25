@@ -84,16 +84,97 @@ function App() {
 
         <Route path="/easy" render={() => <Easy />}></Route>
 
-        <Route path="/medium" render={() => <Medium />}></Route>
-
-        <Route path="/hard" render={() => <Hard />}></Route>
-
-        <Route path="/login" render={() => <Login />}></Route>
-
-        <Route path="/register" render={() => <Register />}></Route>
+        {loaded ? (
+          <Route
+            path="/register"
+            render={() => {
+              if (loginStatus === true) {
+                return <Redirect to="/usercard" />;
+              } else {
+                return <Register />;
+              }
+            }}
+          ></Route>
+        ) : (
+          <Mui.LinearProgress
+            style={{
+              colorPrimary: "rgb(255, 255, 24)",
+              backgroundColor: "black",
+              margin: "auto",
+              marginTop: "60%",
+              width: "80%",
+            }}
+          />
+        )}
+        {loaded ? (
+          <Route
+            path="/login"
+            render={() => {
+              if (loginStatus === true) {
+                return <Redirect to="/usercard" />;
+              } else {
+                return <Login />;
+              }
+            }}
+          ></Route>
+        ) : (
+          <Mui.LinearProgress
+            style={{
+              colorPrimary: "rgb(255, 255, 24)",
+              backgroundColor: "black",
+              margin: "auto",
+              marginTop: "60%",
+              width: "80%",
+            }}
+          />
+        )}
 
         <Route path="/leaderboards" render={() => <Leaderboards />}></Route>
 
+        {loaded ? (
+          <Route
+            path="/medium"
+            render={() => {
+              if (loginStatus === true) {
+                return <Medium />;
+              } else {
+                return <Redirect to="/login" />;
+              }
+            }}
+          ></Route>
+        ) : (
+          <Mui.LinearProgress
+            style={{
+              colorPrimary: "rgb(255, 255, 24)",
+              backgroundColor: "black",
+              margin: "auto",
+              marginTop: "60%",
+              width: "80%",
+            }}
+          />
+        )}
+        {loaded ? (
+          <Route
+            path="/hard"
+            render={() => {
+              if (loginStatus === true) {
+                return <Hard />;
+              } else {
+                return <Redirect to="/login" />;
+              }
+            }}
+          ></Route>
+        ) : (
+          <Mui.LinearProgress
+            style={{
+              colorPrimary: "rgb(255, 255, 24)",
+              backgroundColor: "black",
+              margin: "auto",
+              marginTop: "60%",
+              width: "80%",
+            }}
+          />
+        )}
         {loaded ? (
           <Route
             path="/usercard"

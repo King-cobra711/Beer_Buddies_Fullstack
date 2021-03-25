@@ -224,13 +224,25 @@ const UserCard = () => {
       {loaded ? (
         <Mui.Grid container spacing={0}>
           <Mui.Grid item xs={4}>
-            <p>{userScores[0].Best_Score} sec</p>
+            {userScores[0].Best_Score == null ? (
+              <p>-</p>
+            ) : (
+              <p>{userScores[0].Best_Score} sec</p>
+            )}
           </Mui.Grid>
           <Mui.Grid item xs={4}>
-            <p>{userScores[1].Best_Score} sec</p>
+            {userScores[1].Best_Score == null ? (
+              <p>-</p>
+            ) : (
+              <p>{userScores[1].Best_Score} sec</p>
+            )}
           </Mui.Grid>
           <Mui.Grid item xs={4}>
-            <p>{userScores[2].Best_Score} sec</p>
+            {userScores[2].Best_Score == null ? (
+              <p>-</p>
+            ) : (
+              <p>{userScores[2].Best_Score} sec</p>
+            )}
           </Mui.Grid>
           <Mui.Grid item xs={4}>
             <p>{userScores[0].Score_Date}</p>

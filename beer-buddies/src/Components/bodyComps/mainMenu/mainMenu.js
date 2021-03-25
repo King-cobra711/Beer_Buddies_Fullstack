@@ -1,11 +1,25 @@
-import React from "react";
+import { React, useEffect, useState } from "react";
+
 import { Link } from "react-router-dom";
 
 import Aux from "../../../hoc/aux";
 import * as Mui from "@material-ui/core";
 import classes from "./mainMenu.module.css";
+import User from "../../../hoc/user";
 
-const mainMenu = () => {
+const MainMenu = () => {
+  const [loggedIn, setLoggedIn] = useState(false);
+  let log = User()[2];
+  useEffect(() => {
+    if (typeof log !== "undefined") {
+      if (log === true) {
+        setLoggedIn(true);
+      } else if (log === false) {
+        setLoggedIn(false);
+      }
+    }
+  }, [log]);
+
   return (
     <Aux>
       <div className={classes.Display}>
@@ -22,14 +36,16 @@ const mainMenu = () => {
           PLAY
         </Mui.Button>
 
-        <Mui.Button
-          href="/login"
-          variant="contained"
-          color="default"
-          size="medium"
-        >
-          LOGIN / Register
-        </Mui.Button>
+        {loggedIn ? null : (
+          <Mui.Button
+            href="/login"
+            variant="contained"
+            color="default"
+            size="medium"
+          >
+            LOGIN / Register
+          </Mui.Button>
+        )}
 
         <Mui.Button
           href="/leaderboards"
@@ -39,12 +55,27 @@ const mainMenu = () => {
         >
           LEADERBOARDS
         </Mui.Button>
-        <Mui.Button variant="contained" color="default" size="medium">
-          FIND FRIENDS
-        </Mui.Button>
+        {loggedIn ? (
+          <Mui.Button variant="contained" color="default" size="medium">
+            FIND FRIENDS
+          </Mui.Button>
+        ) : (
+          <Mui.Button
+            variant="contained"
+            color="default"
+            size="medium"
+            disabled
+            style={{
+              backgroundColor: "rgba(255, 255, 255, 0.726)",
+              color: "rgba(0, 0, 0, 0.500)",
+            }}
+          >
+            Login to view
+          </Mui.Button>
+        )}
       </div>
     </Aux>
   );
 };
 
-export default mainMenu;
+export default MainMenu;

@@ -3,9 +3,11 @@ import React, { useState, useEffect } from "react";
 const UserDetails = (props) => {
   const [user, setUser] = useState([]);
   const [data, setData] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
     setData(false);
+    setLoggedIn(false);
     fetch("http://localhost:3001/login", {
       method: "GET",
       credentials: "include",
@@ -17,17 +19,18 @@ const UserDetails = (props) => {
         res.json().then((data) => {
           setUser(data.User);
           setData(true);
+          setLoggedIn(true);
         });
-      } else if (res === 403) {
+      } else if (res === 401) {
         res.json().then((data) => {
-          console.log(data);
           setData(true);
+          setLoggedIn(false);
         });
       }
     });
   }, []);
 
-  return [user, data];
+  return [user, data, loggedIn];
 };
 
 export default UserDetails;

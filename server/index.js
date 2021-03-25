@@ -52,8 +52,8 @@ app.post("/register", (req, res) => {
   db.registerUser(req, res, (cb) => {
     if (cb === 400) {
       res.status(400).send({ LoggedIn: false });
-    } else if (cb === 200) {
-      res.status(200).send({ LoggedIn: true });
+    } else {
+      res.status(200).send({ message: "now login" });
     }
   });
 });
@@ -103,6 +103,27 @@ app.post("/userScores", (req, res) => {
 });
 app.post("/UpdateEasyScore", (req, res) => {
   db.newEasyScore(req, (newScore) => {
+    if (newScore === 400) {
+      res.status(200).send({ message: "Better luck next time" });
+    } else if (newScore === 201) {
+      req.session.user.User_Level = 2;
+      res.status(200).send({ message: "New Best Score! Next level unlocked!" });
+    } else {
+      res.status(200).send({ message: "New Best Score!" });
+    }
+  });
+});
+app.post("/UpdateMediumScore", (req, res) => {
+  db.newMediumScore(req, (newScore) => {
+    if (newScore === 400) {
+      res.status(200).send({ message: "Better luck next time" });
+    } else {
+      res.status(200).send({ message: "New Best Score!" });
+    }
+  });
+});
+app.post("/UpdateHardScore", (req, res) => {
+  db.newHardScore(req, (newScore) => {
     if (newScore === 400) {
       res.status(200).send({ message: "Better luck next time" });
     } else {

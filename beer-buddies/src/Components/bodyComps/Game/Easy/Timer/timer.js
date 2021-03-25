@@ -23,7 +23,6 @@ export default function Timer({
     setCards(initialiseDeck());
     setSeconds(0);
     setIsActive(false);
-    // begin(true)
     isStarted(false);
     setFlipped([]);
     setSolved([]);
