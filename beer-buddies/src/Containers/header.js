@@ -1,5 +1,5 @@
-import React from "react";
-
+import { React, useEffect, useState } from "react";
+import User from "../hoc/user";
 import classes from "./header.module.css";
 
 const Header = () => {

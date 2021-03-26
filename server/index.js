@@ -53,7 +53,10 @@ app.post("/register", (req, res) => {
     if (cb === 400) {
       res.status(400).send({ LoggedIn: false });
     } else {
-      res.status(200).send({ message: "now login" });
+      req.session.user = cb[0];
+      console.log(req.session.user);
+      console.log("above");
+      res.status(200).send({ LoggedIn: true });
     }
   });
 });
@@ -108,7 +111,7 @@ app.post("/UpdateEasyScore", (req, res) => {
     } else if (newScore === 201) {
       req.session.user.User_Level = 2;
       res.status(200).send({ message: "New Best Score! Next level unlocked!" });
-    } else {
+    } else if (newScore === 200) {
       res.status(200).send({ message: "New Best Score!" });
     }
   });

@@ -30,7 +30,7 @@ const Login = () => {
             .then((res) => {
               if (res.status === 200) {
                 res.json().then((data) => {
-                  // history.push("/");
+                  history.push("/");
                   history.go(0);
                 });
               } else if (res.status === 406 || res.status === 404) {

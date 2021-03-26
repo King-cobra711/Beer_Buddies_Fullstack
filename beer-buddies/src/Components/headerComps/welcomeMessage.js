@@ -1,4 +1,5 @@
 import React from "react";
+import { useEffect, useState } from "react";
 import classes from "./welcomMessage.module.css";
 import * as Mui from "@material-ui/core";
 import { Link, useHistory } from "react-router-dom";
@@ -6,6 +7,20 @@ import User from "../../hoc/user";
 
 const WelcomeMessage = () => {
   let history = useHistory();
+  let user = User()[0].User_Name;
+
+  const [username, setUserName] = useState("");
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    if (typeof user !== "undefined") {
+      setUserName(user);
+      setLoaded(true);
+    } else {
+      setLoaded(false);
+    }
+  }, [user]);
+
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event) => {
@@ -41,7 +56,20 @@ const WelcomeMessage = () => {
     <div className={classes.MessageBox}>
       <Mui.Grid container spacing={1}>
         <Mui.Grid item xs={10}>
-          <h3> {`Welcome ${User()[0].User_Name}!`}</h3>
+          <h3>
+            {loaded ? (
+              `Welcome ${username}`
+            ) : (
+              <Mui.LinearProgress
+                style={{
+                  colorPrimary: "rgb(255, 255, 24)",
+                  backgroundColor: "black",
+                  margin: "auto",
+                  width: "80%",
+                }}
+              />
+            )}
+          </h3>
         </Mui.Grid>
         <Mui.Grid item xs={2}>
           <Mui.Avatar

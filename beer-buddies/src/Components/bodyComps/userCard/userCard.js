@@ -3,10 +3,13 @@ import { Link } from "react-router-dom";
 
 import classes from "./userCard.module.css";
 import * as Mui from "@material-ui/core";
+import { useHistory } from "react-router-dom";
 
 import User from "../../../hoc/user";
 
 const UserCard = () => {
+  let history = useHistory();
+
   const [open, setOpen] = useState(false);
   const handleOpen = () => {
     setOpen(true);
@@ -24,6 +27,10 @@ const UserCard = () => {
   const [userScores, setUserScores] = useState({});
   const [loaded, setLoaded] = useState(false);
   let PlayerID = User()[0].User_ID;
+
+  const home = () => {
+    history.push("/");
+  };
 
   useEffect(() => {
     if (typeof PlayerID !== "undefined") {
@@ -151,9 +158,7 @@ const UserCard = () => {
       </Mui.Modal>
       <ul className={classes.Navbar}>
         <li>
-          <Link to="/">
-            <button>Main Menu</button>
-          </Link>
+          <button onClick={() => home()}>Main Menu</button>
         </li>
         <li>
           <Link to="/difficulty">

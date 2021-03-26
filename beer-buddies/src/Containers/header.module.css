@@ -1,17 +1,39 @@
 .Background {
   width: 100%;
   height: 130px;
-  border: white dotted;
+  animation: rotate 12s linear infinite;
+  border: 5px white dotted;
   /* border-bottom: none; */
   box-sizing: border-box;
   background-image: url(../Assets/images/Header/BeerBuddiesHeader.png);
   background-repeat: no-repeat;
   background-size: contain;
+  animation: mymove 1s infinite;
 }
+@keyframes mymove {
+  25% {
+    border-top: solid white;
+  }
+  50% {
+    border-left: solid white;
+  }
+  75% {
+    border-bottom: solid white;
+  }
+  100% {
+    border-right: solid white;
+  }
+}
+/* @keyframes mymove {
+  50% {
+    border: solid white;
+  }
+} */
 .MainContainer {
   max-width: 100%;
   background-color: black;
 }
+
 @media screen and (min-width: 410px) {
   .Background {
     background-image: url(../Assets/images/Header/largeMobileBackground.png);

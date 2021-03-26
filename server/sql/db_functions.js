@@ -59,6 +59,9 @@ const registerUser = (req, res, cb) => {
   const leaderBoardHardRegister =
     "INSERT into Leaderboards (User_ID, Game_ID) VALUES (?, 3)";
 
+  const login =
+    "SELECT User_ID, User_Name, DATE_FORMAT(User_Date_Joined, '%d/%m/%Y') AS 'User_Date_Joined', User_Bio, User_Picture, User_Theme, User_Blacklist_Status, User_Level FROM User WHERE User_ID = ?";
+
   bcrypt.hash(Password, saltRounds, (err, hash) => {
     if (err) {
       console.log(err);
@@ -72,6 +75,16 @@ const registerUser = (req, res, cb) => {
         console.log(result);
         const lastID = result.insertId;
 
+        db.query(login, [lastID], (err, response) => {
+          if (err) {
+            console.log(err);
+          } else if (response) {
+            console.log(response);
+            cb(response);
+          } else {
+            console.log("error");
+          }
+        });
         db.query(leaderBoardEasyRegister, [lastID], (err, response) => {
           if (err) {
             console.log(err);
@@ -99,7 +112,6 @@ const registerUser = (req, res, cb) => {
             console.log("error");
           }
         });
-        cb([{ username: Username, password: Password }]);
       }
     });
   });
@@ -182,10 +194,10 @@ const newEasyScore = (req, newScore) => {
                     newScore(201);
                   }
                 });
-              } else {
-                newScore(200);
               }
             });
+          } else {
+            newScore(200);
           }
         }
       });

@@ -12,9 +12,9 @@ import * as Mui from "@material-ui/core";
 const Register = () => {
   const [userExists, setUserExists] = useState("");
   const [emailExists, setEmailExists] = useState("");
-  const [loggedIn, setLoggedIn] = useState(false);
 
   let history = useHistory();
+
   return (
     <Aux>
       <Formik
@@ -31,6 +31,7 @@ const Register = () => {
             headers: {
               "Content-type": "application/json",
             },
+            credentials: "include",
             body: JSON.stringify(fields),
           }).then((res) => {
             console.log(res.status);
@@ -40,14 +41,15 @@ const Register = () => {
                 headers: {
                   "Content-type": "application/json",
                 },
+                credentials: "include",
                 body: JSON.stringify(fields),
               }).then((res) => {
                 if (res.status === 200) {
                   res.json().then((data) => {
-                    setLoggedIn(data.loggedIn);
+                    console.log(data);
                     setUserExists("");
                     setEmailExists("");
-                    history.push("/login");
+                    history.push("/");
                     history.go(0);
                   });
                 }

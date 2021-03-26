@@ -39,9 +39,9 @@ function App() {
           console.log(res);
           if (res.status === 200) {
             res.json().then((data) => {
-              console.log(data.loggedIn);
               setLoginStatus(data.loggedIn);
-              console.log(data.userDetails);
+              console.log(data.loggedIn);
+              console.log(loginStatus);
               setLoaded(true);
             });
           } else if (res.status === 401) {
@@ -67,7 +67,7 @@ function App() {
   return (
     <BrowserRouter>
       <div className="App">
-        <Route
+        {/* <Route
           path="/"
           render={() => {
             if (loginStatus) {
@@ -76,8 +76,9 @@ function App() {
               return <Header />;
             }
           }}
-        ></Route>
+        ></Route> */}
 
+        <Route path="/" render={() => <HeaderWelcome />}></Route>
         <Route path="/" exact render={() => <MainMenu />}></Route>
 
         <Route path="/difficulty" render={() => <ChooseDifficulty />}></Route>
