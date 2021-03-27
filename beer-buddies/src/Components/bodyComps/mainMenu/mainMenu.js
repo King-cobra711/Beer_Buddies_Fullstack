@@ -34,7 +34,7 @@ const MainMenu = () => {
       {loaded ? (
         <div>
           {loggedIn ? (
-            <div className={classes.Display}>
+            <div className={classes.loggedIn}>
               <Mui.Button
                 variant="contained"
                 color="default"

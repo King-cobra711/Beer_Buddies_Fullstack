@@ -8,7 +8,6 @@ import * as Mui from "@material-ui/core";
 
 import MainMenu from "./Components/bodyComps/mainMenu/mainMenu";
 import HeaderWelcome from "./Containers/headerWelcome";
-import Header from "./Containers/header";
 import Easy from "./Components/bodyComps/Game/Easy/gameEasy";
 import Medium from "./Components/bodyComps/Game/Medium/gameMedium";
 import Hard from "./Components/bodyComps/Game/Hard/gameHard";

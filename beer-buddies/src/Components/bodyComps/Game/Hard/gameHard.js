@@ -152,7 +152,16 @@ const Hard = () => {
             HOME
           </Mui.Button>
         </li>
-
+        <li>
+          <Mui.Button
+            href="/difficulty"
+            variant="contained"
+            color="default"
+            size="medium"
+          >
+            LEVEL
+          </Mui.Button>
+        </li>
         <li>
           <Timer
             setEndGame={setEndGame}

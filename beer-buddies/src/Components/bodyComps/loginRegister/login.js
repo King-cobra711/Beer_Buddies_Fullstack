@@ -4,7 +4,6 @@ import { Formik, Field, Form, ErrorMessage } from "formik";
 import Aux from "../../../hoc/aux";
 import classes from "./login.module.css";
 import * as Mui from "@material-ui/core";
-import { Redirect } from "react-router";
 import { useHistory } from "react-router-dom";
 
 const Login = () => {

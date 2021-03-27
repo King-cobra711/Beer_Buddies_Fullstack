@@ -1,6 +1,6 @@
 .MessageBox {
   background-color: rgba(0, 0, 0, 0.329);
-  border: rgba(117, 117, 245, 0.767) double;
+  border: rgba(117, 117, 245, 0.767) double 4px;
   border-left: white none;
   border-right: none;
   /* border-top: none; */

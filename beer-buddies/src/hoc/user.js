@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const UserDetails = (props) => {
+const UserDetails = (refresh) => {
   const [user, setUser] = useState([]);
   const [data, setData] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
@@ -8,7 +8,7 @@ const UserDetails = (props) => {
   useEffect(() => {
     setLoggedIn(false);
     async function fetchAPI() {
-      const request = await fetch("http://localhost:3001/login", {
+      const request = await fetch("http://localhost:3001/user", {
         method: "GET",
         credentials: "include",
         headers: {
@@ -17,21 +17,21 @@ const UserDetails = (props) => {
       }).then((res) => {
         if (res.status === 200) {
           res.json().then((data) => {
-            setUser(data.User);
-            setData(true);
-            setLoggedIn(true);
-          });
-        } else if (res.status === 401) {
-          res.json().then((data) => {
-            setData(true);
-            setLoggedIn(false);
+            if (data.loggedIn === true) {
+              setUser(data.User);
+              setData(true);
+              setLoggedIn(true);
+            } else if (data.loggedIn === false) {
+              setData(true);
+              setLoggedIn(false);
+            }
           });
         }
       });
       return request;
     }
     fetchAPI();
-  }, []);
+  }, [refresh]);
 
   return [user, data, loggedIn];
 };

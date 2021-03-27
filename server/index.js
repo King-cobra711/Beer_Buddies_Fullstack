@@ -85,6 +85,13 @@ app.get("/login", (req, res) => {
     res.status(401).send({ loggedIn: false });
   }
 });
+app.get("/user", (req, res) => {
+  if (req.session.user) {
+    res.status(200).send({ loggedIn: true, User: req.session.user });
+  } else {
+    res.status(200).send({ loggedIn: false });
+  }
+});
 
 app.get("/logout", (req, res) => {
   req.session.destroy();
@@ -120,7 +127,10 @@ app.post("/UpdateMediumScore", (req, res) => {
   db.newMediumScore(req, (newScore) => {
     if (newScore === 400) {
       res.status(200).send({ message: "Better luck next time" });
-    } else {
+    } else if (newScore === 201) {
+      req.session.user.User_Level = 3;
+      res.status(200).send({ message: "New Best Score! Next level unlocked!" });
+    } else if (newScore === 200) {
       res.status(200).send({ message: "New Best Score!" });
     }
   });
@@ -131,6 +141,17 @@ app.post("/UpdateHardScore", (req, res) => {
       res.status(200).send({ message: "Better luck next time" });
     } else {
       res.status(200).send({ message: "New Best Score!" });
+    }
+  });
+});
+app.post("/UpdateBiography", (req, res) => {
+  db.updateUserBio(req, (cb) => {
+    if (cb === 400) {
+      res.status(200).send({ message: "Failed to update", code: 400 });
+    } else {
+      console.log(cb);
+      req.session.user.User_Bio = cb;
+      res.status(200).send({ message: "Updated Biography", code: 200 });
     }
   });
 });

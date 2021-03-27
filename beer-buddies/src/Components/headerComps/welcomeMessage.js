@@ -8,6 +8,7 @@ import User from "../../hoc/user";
 const WelcomeMessage = () => {
   let history = useHistory();
   let user = User()[0].User_Name;
+  let theme = User()[0].User_Theme;
 
   const [username, setUserName] = useState("");
   const [loaded, setLoaded] = useState(false);
@@ -53,7 +54,7 @@ const WelcomeMessage = () => {
   };
 
   return (
-    <div className={classes.MessageBox}>
+    <div className={classes.MessageBox} style={{ borderColor: theme }}>
       <Mui.Grid container spacing={1}>
         <Mui.Grid item xs={10}>
           <h3>
@@ -65,7 +66,8 @@ const WelcomeMessage = () => {
                   colorPrimary: "rgb(255, 255, 24)",
                   backgroundColor: "black",
                   margin: "auto",
-                  width: "80%",
+                  marginLeft: "5%",
+                  width: "100%",
                 }}
               />
             )}

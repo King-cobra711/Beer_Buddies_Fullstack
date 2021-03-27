@@ -65,8 +65,8 @@ export default function Timer({
       >
         RESET
       </Mui.Button>
-      <Mui.Icon style={{ marginLeft: "20%" }}>timer</Mui.Icon>
-      <div className={classes.timer} style={{ marginLeft: "30%" }}>
+      <Mui.Icon style={{ marginLeft: "15%" }}>timer</Mui.Icon>
+      <div className={classes.timer} style={{ marginLeft: "25%" }}>
         {seconds}s
       </div>
     </div>

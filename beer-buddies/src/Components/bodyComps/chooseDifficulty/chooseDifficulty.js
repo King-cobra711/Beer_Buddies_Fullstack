@@ -53,9 +53,7 @@ const ChooseDifficulty = () => {
                     backgroundColor: "rgba(255, 255, 255, 0.726)",
                     color: "rgba(0, 0, 0, 0.500)",
                   }}
-                  endIcon={
-                    <Mui.Icon style={{ marginLeft: 5 }}>timer_off</Mui.Icon>
-                  }
+                  endIcon={<Mui.Icon style={{ marginLeft: 5 }}>lock</Mui.Icon>}
                 >
                   DRUNK
                 </Mui.Button>
@@ -69,9 +67,7 @@ const ChooseDifficulty = () => {
                     backgroundColor: "rgba(255, 255, 255, 0.726)",
                     color: "rgba(0, 0, 0, 0.500)",
                   }}
-                  endIcon={
-                    <Mui.Icon style={{ marginLeft: 5 }}>timer_off</Mui.Icon>
-                  }
+                  endIcon={<Mui.Icon style={{ marginLeft: 5 }}>lock</Mui.Icon>}
                 >
                   HAMMERED
                 </Mui.Button>
@@ -100,9 +96,7 @@ const ChooseDifficulty = () => {
                     backgroundColor: "rgba(255, 255, 255, 0.726)",
                     color: "rgba(0, 0, 0, 0.500)",
                   }}
-                  endIcon={
-                    <Mui.Icon style={{ marginLeft: 5 }}>timer_off</Mui.Icon>
-                  }
+                  endIcon={<Mui.Icon style={{ marginLeft: 5 }}>lock</Mui.Icon>}
                 >
                   HAMMERED
                 </Mui.Button>

@@ -194,6 +194,8 @@ const newEasyScore = (req, newScore) => {
                     newScore(201);
                   }
                 });
+              } else {
+                newScore(200);
               }
             });
           } else {
@@ -220,17 +222,40 @@ const newMediumScore = (req, newScore) => {
   const insert =
     "UPDATE Leaderboards SET Best_Score = ?, Score_Date = CURRENT_DATE WHERE (User_ID = ? AND Game_ID = 2)";
 
+  const levelCheck = "SELECT User_Level FROM User WHERE User_ID = ?";
+
+  const updateLevel = "UPDATE User SET User_Level = 3 WHERE User_ID = ?;";
+
   db.query(check, [id], (err, res) => {
     if (err) {
       console.log(err);
     }
     if (res[0].Best_Score > score) {
-      db.query(insert, [score, id], (error, response) => {
+      db.query(insert, [score, id], (error, res) => {
         if (error) {
           console.log(error);
         }
         if (response) {
-          newScore(200);
+          if (score <= 10) {
+            db.query(levelCheck, [id], (err, response) => {
+              if (err) {
+                console.log(err);
+              }
+              if (res[0].User_Level === 2) {
+                db.query(updateLevel, [id], (error, response) => {
+                  if (error) {
+                    console.log(error);
+                  }
+                  if (response) {
+                    console.log(response);
+                    newScore(201);
+                  }
+                });
+              }
+            });
+          } else {
+            newScore(200);
+          }
         }
       });
     } else if (res[0].Best_Score <= score) {
@@ -273,11 +298,31 @@ const newHardScore = (req, newScore) => {
   });
 };
 
+const updateUserBio = (req, cb) => {
+  const id = req.body.id;
+  const bio = req.body.Biography;
+  console.log(bio);
+  console.log(id);
+
+  const updateBio = "UPDATE User SET User_Bio = ? WHERE User_ID = ? ";
+
+  db.query(updateBio, [bio, id], (err, res) => {
+    if (err) {
+      console.log(err);
+    }
+    if (res) {
+      cb(bio);
+    } else {
+      cb(400);
+    }
+  });
+};
+
 // GET
 
 const scores = (res) => {
   const allScores =
-    "SELECT User.User_Name, Leaderboards.Best_Score from User JOIN Leaderboards ON User.User_ID = Leaderboards.User_ID WHERE Game_ID = 1 ORDER BY Leaderboards.Best_Score ASC;SELECT User.User_Name, Leaderboards.Best_Score from User JOIN Leaderboards ON User.User_ID = Leaderboards.User_ID WHERE Game_ID = 2 ORDER BY Leaderboards.Best_Score ASC;SELECT User.User_Name, Leaderboards.Best_Score from User JOIN Leaderboards ON User.User_ID = Leaderboards.User_ID WHERE Game_ID = 3 ORDER BY Leaderboards.Best_Score ASC;";
+    "SELECT User.User_Name, Leaderboards.Best_Score from User JOIN Leaderboards ON User.User_ID = Leaderboards.User_ID WHERE Game_ID = 1 AND Leaderboards.Best_Score IS NOT NULL ORDER BY Leaderboards.Best_Score ASC;SELECT User.User_Name, Leaderboards.Best_Score from User JOIN Leaderboards ON User.User_ID = Leaderboards.User_ID WHERE Game_ID = 2 AND Leaderboards.Best_Score IS NOT NULL ORDER BY Leaderboards.Best_Score ASC;SELECT User.User_Name, Leaderboards.Best_Score from User JOIN Leaderboards ON User.User_ID = Leaderboards.User_ID WHERE Game_ID = 3 AND Leaderboards.Best_Score IS NOT NULL ORDER BY Leaderboards.Best_Score ASC;";
 
   db.query(allScores, [0, 1, 2], (err, result) => {
     console.log(err);
@@ -312,4 +357,5 @@ module.exports = {
   newEasyScore: newEasyScore,
   newMediumScore: newMediumScore,
   newHardScore: newHardScore,
+  updateUserBio: updateUserBio,
 };

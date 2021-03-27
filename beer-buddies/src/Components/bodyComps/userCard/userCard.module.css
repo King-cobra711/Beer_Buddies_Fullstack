@@ -24,6 +24,27 @@ p {
   background-color: rgba(255, 255, 255, 0.582);
   color: black;
 }
+.BioModal {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.582);
+  color: black;
+}
+.BioForm {
+  text-align: center;
+}
+.BioForm input {
+  width: 80%;
+  font-size: 1.5em;
+  margin-bottom: 1em;
+  font-family: "DotGothic16", sans-serif;
+}
+.BioForm button {
+  width: 20%;
+  font-family: "DotGothic16", sans-serif;
+}
 .modalMessage {
   padding: 10px;
   margin: 5px;
@@ -63,4 +84,9 @@ button {
   background-color: white;
   border: solid black;
   box-sizing: border-box;
+}
+.errorMessage {
+  color: rgb(255, 251, 0);
+  font-size: 1em;
+  margin: 4px;
 }

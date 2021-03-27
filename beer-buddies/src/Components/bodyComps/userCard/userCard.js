@@ -1,5 +1,7 @@
 import { React, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { Formik, Field, Form, ErrorMessage } from "formik";
+import { userSchemaBio } from "../../../Validations/Usercard/biography";
 
 import classes from "./userCard.module.css";
 import * as Mui from "@material-ui/core";
@@ -11,12 +13,19 @@ const UserCard = () => {
   let history = useHistory();
 
   const [open, setOpen] = useState(false);
+  const [openBio, setOpenBio] = useState(false);
   const handleOpen = () => {
     setOpen(true);
+  };
+  const handleOpenBio = () => {
+    setOpenBio(true);
   };
 
   const handleClose = () => {
     setOpen(false);
+  };
+  const handleCloseBio = () => {
+    setOpenBio(false);
   };
 
   const [onOff, setSwitch] = useState(true);
@@ -26,7 +35,10 @@ const UserCard = () => {
 
   const [userScores, setUserScores] = useState({});
   const [loaded, setLoaded] = useState(false);
+  const [refresh, setrefresh] = useState(false);
+
   let PlayerID = User()[0].User_ID;
+  let Data = User()[1];
 
   const home = () => {
     history.push("/");
@@ -58,7 +70,7 @@ const UserCard = () => {
       }
       fetchAPI();
     }
-  }, [PlayerID]);
+  }, [Data]);
 
   return (
     <div className={classes.Display}>
@@ -109,7 +121,7 @@ const UserCard = () => {
                   variant="contained"
                   color="default"
                   size="medium"
-                  // component={ Link } to="/difficulty"
+                  onClick={handleOpenBio}
                   endIcon={
                     <Mui.Icon style={{ marginLeft: 5 }}>create</Mui.Icon>
                   }
@@ -151,6 +163,104 @@ const UserCard = () => {
                   />
                 </Mui.Grid>
                 <Mui.Grid item>On</Mui.Grid>
+              </Mui.Grid>
+            </Mui.Grid>
+          </div>
+        </Mui.Fade>
+      </Mui.Modal>
+      <Mui.Modal
+        className={classes.BioModal}
+        open={openBio}
+        onClose={handleCloseBio}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+      >
+        <Mui.Fade in={openBio}>
+          <div className={classes.modalMessage}>
+            <Mui.Grid
+              component="label"
+              container
+              alignItems="center"
+              spacing={2}
+            >
+              <Mui.Grid item xs={12}>
+                <Formik
+                  initialValues={{
+                    Biography: "",
+                    id: "",
+                  }}
+                  validationSchema={userSchemaBio}
+                  onSubmit={(fields) => {
+                    fetch("http://localhost:3001/UpdateBiography", {
+                      method: "POST",
+                      headers: {
+                        "Content-type": "application/json",
+                      },
+                      credentials: "include",
+                      body: JSON.stringify(fields),
+                    }).then((res) => {
+                      if (res.status === 200) {
+                        setOpenBio(false);
+                        res.json().then((data) => {
+                          if (data.code === 200) {
+                            console.log(data.message);
+                          } else if (data.code === 400) {
+                            console.log(data.message);
+                          } else {
+                            console.log("ERROR Updating Biography");
+                          }
+                        });
+                      }
+                    });
+                  }}
+                >
+                  <Form className={classes.BioForm}>
+                    <h2>Biography</h2>
+                    <Field
+                      name="Biography"
+                      type="text"
+                      placeholder="100 charachters max"
+                    />
+                    <ErrorMessage
+                      name="Biography"
+                      component="p"
+                      className={classes.errorMessage}
+                    />
+                    <Field name="id" type="number" value={PlayerID} hidden />
+                    <div style={{ width: "80%", margin: "auto" }}>
+                      <Mui.Button
+                        style={{
+                          padding: 5,
+                          margin: 10,
+                          marginLeft: 0,
+                          float: "left",
+                          letterSpacing: 2,
+                        }}
+                        variant="contained"
+                        color="default"
+                        size="medium"
+                        type="submit"
+                      >
+                        Submit
+                      </Mui.Button>
+                      <Mui.Button
+                        style={{
+                          padding: 5,
+                          margin: 10,
+                          marginLeft: 0,
+                          float: "right",
+                          letterSpacing: 2,
+                        }}
+                        variant="contained"
+                        color="default"
+                        size="medium"
+                        onClick={handleCloseBio}
+                      >
+                        Close
+                      </Mui.Button>
+                    </div>
+                  </Form>
+                </Formik>
               </Mui.Grid>
             </Mui.Grid>
           </div>
