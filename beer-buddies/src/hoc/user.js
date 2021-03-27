@@ -31,7 +31,7 @@ const UserDetails = (refresh) => {
       return request;
     }
     fetchAPI();
-  }, [refresh]);
+  }, []);
 
   return [user, data, loggedIn];
 };

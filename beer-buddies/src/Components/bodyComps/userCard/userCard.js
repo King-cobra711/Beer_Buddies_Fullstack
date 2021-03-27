@@ -7,7 +7,7 @@ import classes from "./userCard.module.css";
 import * as Mui from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 
-import User from "../../../hoc/user";
+// import User from "../../../hoc/user";
 
 const UserCard = () => {
   let history = useHistory();
@@ -32,17 +32,51 @@ const UserCard = () => {
   const handleSwitch = (onOff) => {
     setSwitch(!onOff);
   };
-
+  const [User, setUser] = useState([{}, false, false]);
+  const [user, setuser] = useState([]);
+  const [data, setData] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
   const [userScores, setUserScores] = useState({});
   const [loaded, setLoaded] = useState(false);
-  const [refresh, setrefresh] = useState(false);
+  const [update, setUpdate] = useState(false);
+  let PlayerID = User[0].User_ID;
+  let Data = User[1];
 
-  let PlayerID = User()[0].User_ID;
-  let Data = User()[1];
+  const refresh = () => {
+    setUpdate(!update);
+  };
 
   const home = () => {
     history.push("/");
   };
+
+  useEffect(() => {
+    setLoggedIn(false);
+    fetch("http://localhost:3001/user", {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application.json",
+      },
+    }).then((res) => {
+      if (res.status === 200) {
+        res.json().then((data) => {
+          if (data.loggedIn === true) {
+            setuser(data.User);
+            setData(true);
+            setLoggedIn(true);
+            setTimeout(() => {
+              setUpdate(!update);
+            }, 1);
+          } else if (data.loggedIn === false) {
+            setData(true);
+            setLoggedIn(false);
+          }
+        });
+      }
+    });
+    setUser([user, data, loggedIn]);
+  }, [data, update]);
 
   useEffect(() => {
     if (typeof PlayerID !== "undefined") {
@@ -201,6 +235,7 @@ const UserCard = () => {
                     }).then((res) => {
                       if (res.status === 200) {
                         setOpenBio(false);
+                        setUpdate(!update);
                         res.json().then((data) => {
                           if (data.code === 200) {
                             console.log(data.message);
@@ -240,6 +275,7 @@ const UserCard = () => {
                         color="default"
                         size="medium"
                         type="submit"
+                        onClick={() => refresh()}
                       >
                         Submit
                       </Mui.Button>
@@ -290,7 +326,7 @@ const UserCard = () => {
               margin: "20px",
               border: "blue solid 2px",
             }}
-            src={`/cards/${User()[0].User_Picture}.png`}
+            src={`/cards/${User[0].User_Picture}.png`}
             alt="coors beer logo"
           />
           <Mui.Icon
@@ -311,14 +347,12 @@ const UserCard = () => {
           >
             settings
           </Mui.Icon>
-          <p style={{ paddingLeft: 10 }}>{`Date joined: ${
-            User()[0].User_Date_Joined
-          }`}</p>
-          <p style={{ paddingLeft: 10 }}>{`Username: ${
-            User()[0].User_Name
-          }`}</p>
+          <p
+            style={{ paddingLeft: 10 }}
+          >{`Date joined: ${User[0].User_Date_Joined}`}</p>
+          <p style={{ paddingLeft: 10 }}>{`Username: ${User[0].User_Name}`}</p>
           <p style={{ paddingLeft: 10 }}>{`
-            Biography: ${User()[0].User_Bio}`}</p>
+            Biography: ${User[0].User_Bio}`}</p>
         </Mui.Grid>
         <Mui.Grid item xs={4}>
           <h2>
