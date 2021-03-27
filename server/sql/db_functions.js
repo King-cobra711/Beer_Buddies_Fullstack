@@ -60,7 +60,7 @@ const registerUser = (req, res, cb) => {
     "INSERT into Leaderboards (User_ID, Game_ID) VALUES (?, 3)";
 
   const login =
-    "SELECT User_ID, User_Name, DATE_FORMAT(User_Date_Joined, '%d/%m/%Y') AS 'User_Date_Joined', User_Bio, User_Picture, User_Theme, User_Blacklist_Status, User_Level FROM User WHERE User_ID = ?";
+    "SELECT User_ID, UserType_ID, User_Name, DATE_FORMAT(User_Date_Joined, '%d/%m/%Y') AS 'User_Date_Joined', User_Bio, User_Picture, User_Theme, User_Blacklist_Status, User_Level FROM User WHERE User_ID = ?";
 
   bcrypt.hash(Password, saltRounds, (err, hash) => {
     if (err) {
@@ -125,7 +125,7 @@ const Login = (req, logstat) => {
     "SELECT User_Name, User_Password FROM User WHERE User_Name = ?";
 
   const login =
-    "SELECT User_ID, User_Name, DATE_FORMAT(User_Date_Joined, '%d/%m/%Y') AS 'User_Date_Joined', User_Bio, User_Picture, User_Theme, User_Blacklist_Status, User_Level FROM User WHERE User_Name = ?";
+    "SELECT User_ID, UserType_ID, User_Name, DATE_FORMAT(User_Date_Joined, '%d/%m/%Y') AS 'User_Date_Joined', User_Bio, User_Picture, User_Theme, User_Blacklist_Status, User_Level FROM User WHERE User_Name = ?";
 
   db.query(checkDetails, [userName], (err, result) => {
     console.log(err);

@@ -118,6 +118,24 @@ const UserCard = () => {
       >
         <Mui.Fade in={open}>
           <div className={classes.modalMessage}>
+            <Mui.Button
+              variant="contained"
+              color="default"
+              size="small"
+              style={{
+                minWidth: "20px",
+                width: "30px",
+                height: "30px",
+                position: "relative",
+                bottom: "4em",
+                left: "90%",
+                padding: 0,
+                color: "rgb(163, 2, 2)",
+              }}
+              onClick={() => handleClose()}
+            >
+              X
+            </Mui.Button>
             <Mui.Grid
               component="label"
               container
@@ -351,8 +369,8 @@ const UserCard = () => {
             style={{ paddingLeft: 10 }}
           >{`Date joined: ${User[0].User_Date_Joined}`}</p>
           <p style={{ paddingLeft: 10 }}>{`Username: ${User[0].User_Name}`}</p>
-          <p style={{ paddingLeft: 10 }}>{`
-            Biography: ${User[0].User_Bio}`}</p>
+          <p style={{ paddingLeft: 10, marginBottom: 0 }}>Biography:</p>
+          <p style={{ paddingLeft: 10, marginTop: 5 }}>{User[0].User_Bio}</p>
         </Mui.Grid>
         <Mui.Grid item xs={4}>
           <h2>

@@ -9,6 +9,7 @@ const WelcomeMessage = () => {
   let history = useHistory();
   let user = User()[0].User_Name;
   let theme = User()[0].User_Theme;
+  let userType = User()[0].UserType_ID;
 
   const [username, setUserName] = useState("");
   const [loaded, setLoaded] = useState(false);
@@ -93,12 +94,16 @@ const WelcomeMessage = () => {
               Edit Profile
             </Mui.MenuItem>
             <Mui.MenuItem onClick={handleClose && Logout}>Logout</Mui.MenuItem>
-            <Mui.MenuItem
-              onClick={handleClose}
-              style={{ borderTop: "grey solid" }}
-            >
-              Admin
-            </Mui.MenuItem>
+            {loaded ? (
+              userType === 1 ? (
+                <Mui.MenuItem
+                  onClick={handleClose}
+                  style={{ borderTop: "grey solid" }}
+                >
+                  Admin
+                </Mui.MenuItem>
+              ) : null
+            ) : null}
           </Mui.Menu>
         </Mui.Grid>
       </Mui.Grid>
