@@ -20,6 +20,15 @@ const theme = createMuiTheme({
       contrastText: "#000",
     },
   },
+  overrides: {
+    MuiRadio: {
+      root: {
+        "& .MuiSvgIcon-root": {
+          fontSize: 50,
+        },
+      },
+    },
+  },
 });
 
 ReactDOM.render(

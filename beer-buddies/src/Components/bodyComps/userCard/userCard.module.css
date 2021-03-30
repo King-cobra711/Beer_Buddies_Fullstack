@@ -53,6 +53,15 @@ p {
   background-color: rgba(0, 0, 0, 0.726);
   color: white;
 }
+.modalMessageTheme {
+  padding: 10px;
+  margin: 5px;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(177, 174, 174, 0.829);
+  /* background-color: rgba(202, 200, 200, 0.829); */
+  color: white;
+}
 .modalMessage > p {
   margin: 0;
 }
@@ -89,4 +98,8 @@ button {
   color: rgb(255, 251, 0);
   font-size: 1em;
   margin: 4px;
+}
+
+.icon {
+  transform: scale(1.8);
 }

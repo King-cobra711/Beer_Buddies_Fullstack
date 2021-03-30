@@ -230,23 +230,23 @@ const newMediumScore = (req, newScore) => {
     if (err) {
       console.log(err);
     }
-    if (res[0].Best_Score > score) {
+    if (res[0].Best_Score > score || res[0].Best_Score == null) {
       db.query(insert, [score, id], (error, res) => {
         if (error) {
           console.log(error);
         }
-        if (response) {
+        if (res) {
           if (score <= 10) {
             db.query(levelCheck, [id], (err, response) => {
               if (err) {
                 console.log(err);
               }
-              if (res[0].User_Level === 2) {
-                db.query(updateLevel, [id], (error, response) => {
+              if (response[0].User_Level === 2) {
+                db.query(updateLevel, [id], (error, reply) => {
                   if (error) {
                     console.log(error);
                   }
-                  if (response) {
+                  if (reply) {
                     console.log(response);
                     newScore(201);
                   }
@@ -281,7 +281,7 @@ const newHardScore = (req, newScore) => {
     if (err) {
       console.log(err);
     }
-    if (res[0].Best_Score > score) {
+    if (res[0].Best_Score > score || res[0].Best_Score == null) {
       db.query(insert, [score, id], (error, response) => {
         if (error) {
           console.log(error);
@@ -312,6 +312,24 @@ const updateUserBio = (req, cb) => {
     }
     if (res) {
       cb(bio);
+    } else {
+      cb(400);
+    }
+  });
+};
+const updateUserTheme = (req, cb) => {
+  const id = req.body.id;
+  const theme = req.body.theme;
+  console.log(theme);
+
+  const updateTheme = "UPDATE User SET User_Theme = ? WHERE User_ID = ? ";
+
+  db.query(updateTheme, [theme, id], (err, res) => {
+    if (err) {
+      console.log(err);
+    }
+    if (res) {
+      cb(theme);
     } else {
       cb(400);
     }
@@ -358,4 +376,5 @@ module.exports = {
   newMediumScore: newMediumScore,
   newHardScore: newHardScore,
   updateUserBio: updateUserBio,
+  updateUserTheme: updateUserTheme,
 };

@@ -144,14 +144,25 @@ app.post("/UpdateHardScore", (req, res) => {
     }
   });
 });
+
+app.post("/UpdateTheme", (req, res) => {
+  db.updateUserTheme(req, (cb) => {
+    if (cb === 400) {
+      res.status(200).send({ message: "Fail", code: 400 });
+    } else {
+      req.session.user.User_Theme = cb;
+      res.status(200).send({ message: "success", code: 200 });
+    }
+  });
+});
 app.post("/UpdateBiography", (req, res) => {
   db.updateUserBio(req, (cb) => {
     if (cb === 400) {
       res.status(200).send({ message: "Failed to update", code: 400 });
     } else {
-      console.log(cb);
+      console.log(req.session.user);
       req.session.user.User_Bio = cb;
-      res.status(200).send({ message: "Updated Biography", code: 200 });
+      res.status(200).send({ message: cb, code: 200 });
     }
   });
 });

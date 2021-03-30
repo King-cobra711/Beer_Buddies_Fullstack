@@ -14,20 +14,29 @@ const UserCard = () => {
 
   const [open, setOpen] = useState(false);
   const [openBio, setOpenBio] = useState(false);
+  const [openTheme, setOpenTheme] = useState(false);
   const handleOpen = () => {
     setOpen(true);
-  };
-  const handleOpenBio = () => {
-    setOpenBio(true);
   };
 
   const handleClose = () => {
     setOpen(false);
   };
+
+  const handleOpenBio = () => {
+    setOpenBio(true);
+  };
   const handleCloseBio = () => {
     setOpenBio(false);
   };
+  const handleOpenTheme = () => {
+    setOpenTheme(true);
+  };
+  const handleCloseTheme = () => {
+    setOpenTheme(false);
+  };
 
+  // radio button theme choice
   const [onOff, setSwitch] = useState(true);
   const handleSwitch = (onOff) => {
     setSwitch(!onOff);
@@ -39,11 +48,35 @@ const UserCard = () => {
   const [userScores, setUserScores] = useState({});
   const [loaded, setLoaded] = useState(false);
   const [update, setUpdate] = useState(false);
+  const [playerID, setPlayerID] = useState("");
+  const [bio, setBio] = useState("");
   let PlayerID = User[0].User_ID;
   let Data = User[1];
+  const [selectedValue, setSelectedValue] = useState("");
 
-  const refresh = () => {
-    setUpdate(!update);
+  const handleChangeTheme = (event) => {
+    setSelectedValue(event.target.value);
+  };
+  const themeSubmit = (event) => {
+    event.preventDefault();
+    fetch("http://localhost:3001/UpdateTheme", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "Application.json",
+      },
+      body: JSON.stringify({ id: playerID, theme: selectedValue }),
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          res.json().then((data) => {
+            console.log(data.message);
+          });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const home = () => {
@@ -63,11 +96,11 @@ const UserCard = () => {
         res.json().then((data) => {
           if (data.loggedIn === true) {
             setuser(data.User);
+            setPlayerID(data.User.User_ID);
+            setBio(data.User.User_Bio);
+            console.log(data.User.User_Theme);
             setData(true);
             setLoggedIn(true);
-            setTimeout(() => {
-              setUpdate(!update);
-            }, 1);
           } else if (data.loggedIn === false) {
             setData(true);
             setLoggedIn(false);
@@ -76,7 +109,7 @@ const UserCard = () => {
       }
     });
     setUser([user, data, loggedIn]);
-  }, [data, update]);
+  }, [data]);
 
   useEffect(() => {
     if (typeof PlayerID !== "undefined") {
@@ -91,7 +124,6 @@ const UserCard = () => {
         }).then((res) => {
           if (res.status === 200) {
             res.json().then((data) => {
-              console.log(data.UserScores[0]);
               setUserScores(data.UserScores);
               setLoaded(true);
             });
@@ -108,6 +140,9 @@ const UserCard = () => {
 
   return (
     <div className={classes.Display}>
+      {/*  */}
+      {/* Main Modal */}
+      {/*  */}
       <Mui.Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -156,6 +191,7 @@ const UserCard = () => {
                   variant="contained"
                   color="default"
                   size="medium"
+                  onClick={handleOpenTheme}
                   // component={ Link } to="/difficulty"
                   endIcon={
                     <Mui.Icon style={{ marginLeft: 5 }}>gradient</Mui.Icon>
@@ -220,6 +256,9 @@ const UserCard = () => {
           </div>
         </Mui.Fade>
       </Mui.Modal>
+      {/*  */}
+      {/* Biography Modal */}
+      {/*  */}
       <Mui.Modal
         className={classes.BioModal}
         open={openBio}
@@ -256,6 +295,7 @@ const UserCard = () => {
                         setUpdate(!update);
                         res.json().then((data) => {
                           if (data.code === 200) {
+                            setBio(data.message);
                             console.log(data.message);
                           } else if (data.code === 400) {
                             console.log(data.message);
@@ -293,7 +333,6 @@ const UserCard = () => {
                         color="default"
                         size="medium"
                         type="submit"
-                        onClick={() => refresh()}
                       >
                         Submit
                       </Mui.Button>
@@ -315,6 +354,178 @@ const UserCard = () => {
                     </div>
                   </Form>
                 </Formik>
+              </Mui.Grid>
+            </Mui.Grid>
+          </div>
+        </Mui.Fade>
+      </Mui.Modal>
+      {/*  */}
+      {/* Theme Modal */}
+      {/*  */}
+      <Mui.Modal
+        className={classes.BioModal}
+        open={openTheme}
+        onClose={handleCloseTheme}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+      >
+        <Mui.Fade in={openTheme}>
+          <div className={classes.modalMessageTheme}>
+            <Mui.Grid
+              component="label"
+              container
+              alignItems="center"
+              spacing={1}
+            >
+              <Mui.Grid item xs={12}>
+                <form
+                  onSubmit={() => {
+                    fetch("http://localhost:3001/UpdateTheme", {
+                      method: "POST",
+                      headers: {
+                        "Content-type": "application/json",
+                      },
+                      credentials: "include",
+                      body: JSON.stringify({
+                        id: playerID,
+                        theme: selectedValue,
+                      }),
+                    }).then((res) => {
+                      if (res.status === 200) {
+                        setOpenTheme(false);
+                        setUpdate(!update);
+                        res.json().then((data) => {
+                          if (data.code === 200) {
+                            console.log(data.message);
+                          } else if (data.code === 400) {
+                            console.log(data.message);
+                          } else {
+                            console.log("ERROR Updating Theme");
+                          }
+                        });
+                      }
+                    });
+                  }}
+                >
+                  <Mui.Grid
+                    component="label"
+                    container
+                    alignItems="center"
+                    spacing={1}
+                  >
+                    <Mui.Grid item xs={3} style={{ textAlign: "center" }}>
+                      <Mui.Radio
+                        checked={selectedValue === "blue"}
+                        onChange={handleChangeTheme}
+                        value="blue"
+                        name="blue"
+                        style={{ color: "blue" }}
+                      />
+                    </Mui.Grid>
+                    <Mui.Grid item xs={3} style={{ textAlign: "center" }}>
+                      <Mui.Radio
+                        checked={selectedValue === "red"}
+                        onChange={handleChangeTheme}
+                        value="red"
+                        name="red"
+                        style={{ color: "red" }}
+                      />
+                    </Mui.Grid>
+                    <Mui.Grid item xs={3} style={{ textAlign: "center" }}>
+                      <Mui.Radio
+                        checked={selectedValue === "pink"}
+                        onChange={handleChangeTheme}
+                        value="pink"
+                        name="pink"
+                        style={{ color: "pink" }}
+                      />
+                    </Mui.Grid>
+                    <Mui.Grid item xs={3} style={{ textAlign: "center" }}>
+                      <Mui.Radio
+                        checked={selectedValue === "yellow"}
+                        onChange={handleChangeTheme}
+                        value="yellow"
+                        name="yellow"
+                        style={{ color: "yellow" }}
+                      />
+                    </Mui.Grid>
+                  </Mui.Grid>
+                  <Mui.Grid
+                    component="label"
+                    container
+                    alignItems="center"
+                    spacing={1}
+                  >
+                    <Mui.Grid item xs={3} style={{ textAlign: "center" }}>
+                      <Mui.Radio
+                        checked={selectedValue === "purple"}
+                        onChange={handleChangeTheme}
+                        value="purple"
+                        name="purple"
+                        style={{ color: "purple" }}
+                      />
+                    </Mui.Grid>
+                    <Mui.Grid item xs={3} style={{ textAlign: "center" }}>
+                      <Mui.Radio
+                        checked={selectedValue === "black"}
+                        onChange={handleChangeTheme}
+                        value="black"
+                        name="black"
+                        style={{ color: "black" }}
+                      />
+                    </Mui.Grid>
+                    <Mui.Grid item xs={3} style={{ textAlign: "center" }}>
+                      <Mui.Radio
+                        checked={selectedValue === "white"}
+                        onChange={handleChangeTheme}
+                        value="white"
+                        name="white"
+                        style={{ color: "white" }}
+                      />
+                    </Mui.Grid>
+                    <Mui.Grid item xs={3} style={{ textAlign: "center" }}>
+                      <Mui.Radio
+                        checked={selectedValue === "green"}
+                        onChange={handleChangeTheme}
+                        value="green"
+                        name="green"
+                        style={{ color: "green" }}
+                      />
+                    </Mui.Grid>
+                  </Mui.Grid>
+                  <div style={{ width: "80%", margin: "auto" }}>
+                    <Mui.Button
+                      style={{
+                        width: 20,
+                        padding: 5,
+                        margin: 10,
+                        float: "left",
+                        letterSpacing: 2,
+                      }}
+                      variant="contained"
+                      color="default"
+                      size="small"
+                      type="submit"
+                    >
+                      Submit
+                    </Mui.Button>
+                    <Mui.Button
+                      style={{
+                        width: 20,
+                        padding: 5,
+                        margin: 10,
+                        float: "right",
+                        letterSpacing: 2,
+                      }}
+                      variant="contained"
+                      color="default"
+                      size="small"
+                      onClick={handleCloseTheme}
+                    >
+                      Close
+                    </Mui.Button>
+                  </div>
+                </form>
               </Mui.Grid>
             </Mui.Grid>
           </div>
@@ -370,7 +581,7 @@ const UserCard = () => {
           >{`Date joined: ${User[0].User_Date_Joined}`}</p>
           <p style={{ paddingLeft: 10 }}>{`Username: ${User[0].User_Name}`}</p>
           <p style={{ paddingLeft: 10, marginBottom: 0 }}>Biography:</p>
-          <p style={{ paddingLeft: 10, marginTop: 5 }}>{User[0].User_Bio}</p>
+          <p style={{ paddingLeft: 10, marginTop: 5 }}>{bio}</p>
         </Mui.Grid>
         <Mui.Grid item xs={4}>
           <h2>
