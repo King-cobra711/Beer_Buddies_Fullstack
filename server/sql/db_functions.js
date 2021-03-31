@@ -2,7 +2,6 @@ require("dotenv").config({ path: "/Users/Matt/Desktop/Beer Buddies/.env" });
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const mysql = require("mysql");
-
 const db = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -157,7 +156,6 @@ const Login = (req, logstat) => {
 const newEasyScore = (req, newScore) => {
   const score = req.body.score;
   const id = req.body.id;
-  console.log(score);
 
   const check =
     "SELECT Best_Score FROM Leaderboards WHERE Game_ID = 1 AND User_ID = ?";

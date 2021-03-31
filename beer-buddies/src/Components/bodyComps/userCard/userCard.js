@@ -45,7 +45,7 @@ const UserCard = () => {
   const [user, setuser] = useState([]);
   const [data, setData] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [userScores, setUserScores] = useState({});
+  const [userScores, setUserScores] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const [update, setUpdate] = useState(false);
   const [playerID, setPlayerID] = useState("");
