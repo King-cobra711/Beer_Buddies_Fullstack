@@ -251,9 +251,31 @@ app.post(
   }
 );
 app.post(
+  "/UpdatePic",
+  body("id").isNumeric(),
+  body("Pic").matches({
+    options: ["Coors", "Corona", "Heinekin", "Peroni", "StoneWood", "xxxxGold"],
+  }),
+  (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    } else {
+      db.updateUserPic(req, (cb) => {
+        if (cb === 400) {
+          res.status(200).send({ message: "Fail", code: 400 });
+        } else {
+          req.session.user.User_Picture = cb;
+          res.status(200).send({ message: "success", code: 200 });
+        }
+      });
+    }
+  }
+);
+app.post(
   "/UpdateBiography",
   body("id").isNumeric(),
-  body("bio").isLength({ min: 0, max: 100 }),
+  body("Biography").isLength({ max: 100 }),
   (req, res) => {
     db.updateUserBio(req, (cb) => {
       const errors = validationResult(req);

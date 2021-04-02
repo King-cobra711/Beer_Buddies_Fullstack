@@ -14,8 +14,6 @@ const db = mysql.createPool({
 // POST
 
 const checkRegistrationDetails = (req, status) => {
-  console.log(db.port);
-  console.log("db.port");
   const Email = req.body.Email;
   const Username = req.body.Username;
 
@@ -301,6 +299,7 @@ const updateUserBio = (req, cb) => {
   const bio = req.body.Biography;
   console.log(bio);
   console.log(id);
+  console.log("id an bio above");
 
   const updateBio = "UPDATE User SET User_Bio = ? WHERE User_ID = ? ";
 
@@ -328,6 +327,24 @@ const updateUserTheme = (req, cb) => {
     }
     if (res) {
       cb(theme);
+    } else {
+      cb(400);
+    }
+  });
+};
+const updateUserPic = (req, cb) => {
+  const id = req.body.id;
+  const Pic = req.body.Pic;
+  console.log(Pic);
+
+  const updatePic = "UPDATE User SET User_Picture = ? WHERE User_ID = ? ";
+
+  db.query(updatePic, [Pic, id], (err, res) => {
+    if (err) {
+      console.log(err);
+    }
+    if (res) {
+      cb(Pic);
     } else {
       cb(400);
     }
@@ -375,4 +392,5 @@ module.exports = {
   newHardScore: newHardScore,
   updateUserBio: updateUserBio,
   updateUserTheme: updateUserTheme,
+  updateUserPic: updateUserPic,
 };

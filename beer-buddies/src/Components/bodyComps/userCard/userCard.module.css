@@ -94,6 +94,12 @@ button {
   border: solid black;
   box-sizing: border-box;
 }
+.borderPic {
+  border: rgb(120, 255, 153) 4px solid;
+}
+.noBorderPic {
+  border: transparent 4px solid;
+}
 .errorMessage {
   color: rgb(255, 251, 0);
   font-size: 1em;

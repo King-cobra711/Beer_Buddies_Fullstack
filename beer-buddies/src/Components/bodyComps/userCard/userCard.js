@@ -7,14 +7,13 @@ import classes from "./userCard.module.css";
 import * as Mui from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 
-// import User from "../../../hoc/user";
-
 const UserCard = () => {
   let history = useHistory();
 
   const [open, setOpen] = useState(false);
   const [openBio, setOpenBio] = useState(false);
   const [openTheme, setOpenTheme] = useState(false);
+  const [openPic, setOpenPic] = useState(false);
   const handleOpen = () => {
     setOpen(true);
   };
@@ -35,6 +34,12 @@ const UserCard = () => {
   const handleCloseTheme = () => {
     setOpenTheme(false);
   };
+  const handleOpenPic = () => {
+    setOpenPic(true);
+  };
+  const handleClosePic = () => {
+    setOpenPic(false);
+  };
 
   // radio button theme choice
   const [onOff, setSwitch] = useState(true);
@@ -50,33 +55,14 @@ const UserCard = () => {
   const [update, setUpdate] = useState(false);
   const [playerID, setPlayerID] = useState("");
   const [bio, setBio] = useState("");
+  const [theme, setTheme] = useState("");
   let PlayerID = User[0].User_ID;
   let Data = User[1];
   const [selectedValue, setSelectedValue] = useState("");
+  const [selectedPic, setSelectedPic] = useState("");
 
   const handleChangeTheme = (event) => {
     setSelectedValue(event.target.value);
-  };
-  const themeSubmit = (event) => {
-    event.preventDefault();
-    fetch("http://localhost:3001/UpdateTheme", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "Application.json",
-      },
-      body: JSON.stringify({ id: playerID, theme: selectedValue }),
-    })
-      .then((res) => {
-        if (res.status === 200) {
-          res.json().then((data) => {
-            console.log(data.message);
-          });
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
   };
 
   const home = () => {
@@ -98,7 +84,8 @@ const UserCard = () => {
             setuser(data.User);
             setPlayerID(data.User.User_ID);
             setBio(data.User.User_Bio);
-            console.log(data.User.User_Theme);
+            setTheme(data.User.User_Theme);
+            setSelectedPic(data.User.User_Picture);
             setData(true);
             setLoggedIn(true);
           } else if (data.loggedIn === false) {
@@ -226,6 +213,7 @@ const UserCard = () => {
                   variant="contained"
                   color="default"
                   size="medium"
+                  onClick={handleOpenPic}
                   // component={ Link } to="/difficulty"
                   endIcon={<Mui.Icon style={{ marginLeft: 5 }}>photo</Mui.Icon>}
                 >
@@ -278,10 +266,11 @@ const UserCard = () => {
                 <Formik
                   initialValues={{
                     Biography: "",
-                    id: "",
+                    id: playerID,
                   }}
                   validationSchema={userSchemaBio}
                   onSubmit={(fields) => {
+                    console.log(playerID);
                     fetch("http://localhost:3001/UpdateBiography", {
                       method: "POST",
                       headers: {
@@ -319,7 +308,7 @@ const UserCard = () => {
                       component="p"
                       className={classes.errorMessage}
                     />
-                    <Field name="id" type="number" value={PlayerID} hidden />
+                    <Field name="id" type="number" value={playerID} hidden />
                     <div style={{ width: "80%", margin: "auto" }}>
                       <Mui.Button
                         style={{
@@ -531,6 +520,208 @@ const UserCard = () => {
           </div>
         </Mui.Fade>
       </Mui.Modal>
+      {/*  */}
+      {/* Picture Modal */}
+      {/*  */}
+      <Mui.Modal
+        className={classes.BioModal}
+        open={openPic}
+        onClose={handleClosePic}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+      >
+        <Mui.Fade in={openPic}>
+          <div className={classes.modalMessageTheme}>
+            <Mui.Grid
+              component="label"
+              container
+              alignItems="center"
+              spacing={1}
+            >
+              <Mui.Grid item xs={12}>
+                <form
+                  onSubmit={() => {
+                    fetch("http://localhost:3001/UpdatePic", {
+                      method: "POST",
+                      headers: {
+                        "Content-type": "application/json",
+                      },
+                      credentials: "include",
+                      body: JSON.stringify({
+                        id: playerID,
+                        Pic: selectedPic,
+                      }),
+                    }).then((res) => {
+                      if (res.status === 200) {
+                        setOpenPic(false);
+                        setUpdate(!update);
+                        res.json().then((data) => {
+                          if (data.code === 200) {
+                            console.log(data.message);
+                          } else if (data.code === 400) {
+                            console.log(data.message);
+                          } else {
+                            console.log("ERROR Updating Theme");
+                          }
+                        });
+                      }
+                    });
+                  }}
+                >
+                  <Mui.Grid
+                    component="label"
+                    container
+                    alignItems="center"
+                    spacing={1}
+                  >
+                    <Mui.Grid item xs={4} style={{ textAlign: "center" }}>
+                      <img
+                        style={{
+                          width: 75,
+                          height: 75,
+                          margin: "10px",
+                        }}
+                        className={
+                          selectedPic === "Coors"
+                            ? classes.borderPic
+                            : classes.noBorderPic
+                        }
+                        src="/cards/Coors.png"
+                        alt="logo"
+                        onClick={() => setSelectedPic("Coors")}
+                      />
+                    </Mui.Grid>
+                    <Mui.Grid item xs={4} style={{ textAlign: "center" }}>
+                      <img
+                        style={{
+                          width: 75,
+                          height: 75,
+                          margin: "10px",
+                        }}
+                        className={
+                          selectedPic === "Corona"
+                            ? classes.borderPic
+                            : classes.noBorderPic
+                        }
+                        src="/cards/Corona.png"
+                        alt="logo"
+                        onClick={() => setSelectedPic("Corona")}
+                      />
+                    </Mui.Grid>
+                    <Mui.Grid item xs={4} style={{ textAlign: "center" }}>
+                      <img
+                        style={{
+                          width: 75,
+                          height: 75,
+                          margin: "10px",
+                        }}
+                        className={
+                          selectedPic === "Heineken"
+                            ? classes.borderPic
+                            : classes.noBorderPic
+                        }
+                        src="/cards/Heineken.png"
+                        alt="logo"
+                        onClick={() => setSelectedPic("Heineken")}
+                      />
+                    </Mui.Grid>
+                  </Mui.Grid>
+                  <Mui.Grid
+                    component="label"
+                    container
+                    alignItems="center"
+                    spacing={1}
+                  >
+                    <Mui.Grid item xs={4} style={{ textAlign: "center" }}>
+                      <img
+                        style={{
+                          width: 75,
+                          height: 75,
+                          margin: "10px",
+                        }}
+                        className={
+                          selectedPic === "Peroni"
+                            ? classes.borderPic
+                            : classes.noBorderPic
+                        }
+                        src="/cards/Peroni.png"
+                        alt="logo"
+                        onClick={() => setSelectedPic("Peroni")}
+                      />
+                    </Mui.Grid>
+                    <Mui.Grid item xs={4} style={{ textAlign: "center" }}>
+                      <img
+                        style={{
+                          width: 75,
+                          height: 75,
+                          margin: "10px",
+                        }}
+                        className={
+                          selectedPic === "StoneWood"
+                            ? classes.borderPic
+                            : classes.noBorderPic
+                        }
+                        src="/cards/StoneWood.png"
+                        alt="logo"
+                        onClick={() => setSelectedPic("StoneWood")}
+                      />
+                    </Mui.Grid>
+                    <Mui.Grid item xs={4} style={{ textAlign: "center" }}>
+                      <img
+                        style={{
+                          width: 75,
+                          height: 75,
+                          margin: "10px",
+                        }}
+                        className={
+                          selectedPic === "xxxxGold"
+                            ? classes.borderPic
+                            : classes.noBorderPic
+                        }
+                        src="/cards/xxxxGold.png"
+                        alt="logo"
+                        onClick={() => setSelectedPic("xxxxGold")}
+                      />
+                    </Mui.Grid>
+                  </Mui.Grid>
+                  <div style={{ width: "80%", margin: "auto" }}>
+                    <Mui.Button
+                      style={{
+                        width: 20,
+                        padding: 5,
+                        margin: 10,
+                        float: "left",
+                        letterSpacing: 2,
+                      }}
+                      variant="contained"
+                      color="default"
+                      size="small"
+                      type="submit"
+                    >
+                      Submit
+                    </Mui.Button>
+                    <Mui.Button
+                      style={{
+                        width: 20,
+                        padding: 5,
+                        margin: 10,
+                        float: "right",
+                        letterSpacing: 2,
+                      }}
+                      variant="contained"
+                      color="default"
+                      size="small"
+                      onClick={handleClosePic}
+                    >
+                      Close
+                    </Mui.Button>
+                  </div>
+                </form>
+              </Mui.Grid>
+            </Mui.Grid>
+          </div>
+        </Mui.Fade>
+      </Mui.Modal>
       <ul className={classes.Navbar}>
         <li>
           <button onClick={() => home()}>Main Menu</button>
@@ -548,16 +739,29 @@ const UserCard = () => {
       </ul>
       <Mui.Grid container spacing={0}>
         <Mui.Grid item xs={3}>
-          <img
-            style={{
-              width: 75,
-              height: 75,
-              margin: "20px",
-              border: "blue solid 2px",
-            }}
-            src={`/cards/${User[0].User_Picture}.png`}
-            alt="coors beer logo"
-          />
+          {loaded ? (
+            <img
+              style={{
+                width: 75,
+                height: 75,
+                margin: "20px",
+                border: `${theme} solid 3px`,
+              }}
+              src={`/cards/${User[0].User_Picture}.png`}
+              alt="coors beer logo"
+            />
+          ) : (
+            <div
+              style={{
+                width: 75,
+                height: 75,
+                margin: "20px",
+              }}
+            >
+              ...
+            </div>
+          )}
+
           <Mui.Icon
             style={{ color: "white", border: "white solid 3px", padding: 5 }}
           >
