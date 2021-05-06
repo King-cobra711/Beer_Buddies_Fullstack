@@ -7,6 +7,34 @@ const app = express();
 const db = require("./sql/db_functions");
 const { body, validationResult } = require("express-validator");
 require("dotenv").config({ path: "/Users/Matt/Desktop/Beer Buddies/.env" });
+const rateLimit = require("express-rate-limit");
+
+const { transports, createLogger, format } = require("winston");
+
+const logger = createLogger({
+  format: format.combine(format.timestamp(), format.json()),
+  transports: [
+    new transports.File({
+      filename: "./error.log",
+      level: "error",
+    }),
+    new transports.File({
+      filename: "./action.log",
+      level: "info",
+    }),
+  ],
+});
+
+const limiter = rateLimit({
+  windowMs: 1000, // 1 second
+  max: 10, // limit each IP to 10 requests per windowMs
+  message: "Too many requests",
+});
+const accountLimiter = rateLimit({
+  windowMs: 24 * 60 * 1000, // 24hours
+  max: 1000, // limit each IP to 1000 requests per windowMs
+  message: "Too many requests",
+});
 
 app.use(
   Cors({
@@ -31,6 +59,8 @@ app.use(
     },
   })
 );
+
+app.use(limiter);
 
 app.post(
   "/checkRegisterDetails",
@@ -65,6 +95,7 @@ app.post(
   body("Email").isEmail(),
   body("Username").isLength({ min: 3, max: 15 }),
   body("Password").isLength({ min: 6, max: 20 }),
+  accountLimiter,
   (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -103,17 +134,39 @@ app.post(
           res.status(404).send({ message: "User does not exist" });
         } else {
           req.session.user = logstat[0];
-          console.log(logstat);
-          console.log(req.session.user);
-          console.log("above");
           res.status(200).send({ LoggedIn: true });
+          if (req.session.user.UserType_ID === 1) {
+            logger.info(
+              `IP: ${req.ip}, Username: ${
+                req.session.user.User_Name
+              }, User Type: Administrator, Action: Logged In,  Cookie: ${JSON.stringify(
+                req.session.cookie
+              )}`
+            );
+          } else if (req.session.user.UserType_ID === 2) {
+            logger.info(
+              `IP: ${req.ip}, Username: ${
+                req.session.user.User_Name
+              }, User Type: Registered, Action: Logged In, Cookie: ${JSON.stringify(
+                req.session.cookie
+              )}`
+            );
+          } else {
+            logger.info(
+              `IP: ${req.ip}, Username: ${
+                req.session.user.User_Name
+              }, User Type: Administrator, Action: Logged In, Cookie: ${JSON.stringify(
+                req.session.cookie
+              )}`
+            );
+          }
         }
       });
     }
   }
 );
 
-app.get("/login", (req, res) => {
+app.get("/login", accountLimiter, (req, res) => {
   if (req.session.user) {
     res.status(200).send({ loggedIn: true, User: req.session.user });
   } else {
@@ -129,6 +182,31 @@ app.get("/user", (req, res) => {
 });
 
 app.get("/logout", (req, res) => {
+  if (req.session.user.UserType_ID === 1) {
+    logger.info(
+      `IP: ${req.ip}, Username: ${
+        req.session.user.User_Name
+      }, User Type: Anonymous, Action: Logged Out,  Cookie: ${JSON.stringify(
+        req.session.cookie
+      )}`
+    );
+  } else if (req.session.user.UserType_ID === 2) {
+    logger.info(
+      `IP: ${req.ip}, Username: ${
+        req.session.user.User_Name
+      }, User Type: Registered, Action: Logged Out, Cookie: ${JSON.stringify(
+        req.session.cookie
+      )}`
+    );
+  } else if (req.session.user.UserType_ID === 3) {
+    logger.info(
+      `IP: ${req.ip}, Username: ${
+        req.session.user.User_Name
+      }, User Type: Administrator, Action: Logged Out, Cookie: ${JSON.stringify(
+        req.session.cookie
+      )}`
+    );
+  }
   req.session.destroy();
   res.status(200).send({ Message: "logged out" });
 });
@@ -147,6 +225,31 @@ app.post("/userScores", body("id").isNumeric(), (req, res) => {
         res.status(400).send({ error: "error" });
       } else {
         res.status(200).send({ UserScores: scores });
+        if (req.session.user.UserType_ID === 1) {
+          logger.info(
+            `IP: ${req.ip}, Username: ${
+              req.session.user.User_Name
+            }, User Type: Anonymous, Action: Retrieved User Scores (Easy, Medium, Hard), Cookie: ${JSON.stringify(
+              req.session.cookie
+            )}`
+          );
+        } else if (req.session.user.UserType_ID === 2) {
+          logger.info(
+            `IP: ${req.ip}, Username: ${
+              req.session.user.User_Name
+            }, User Type: Registered, Action: Retrieved User Scores (Easy, Medium, Hard), Cookie: ${JSON.stringify(
+              req.session.cookie
+            )}`
+          );
+        } else if (req.session.user.UserType_ID === 3) {
+          logger.info(
+            `IP: ${req.ip}, Username: ${
+              req.session.user.User_Name
+            }, User Type: Administrator, Action: Retrieved User Scores (Easy, Medium, Hard), Cookie: ${JSON.stringify(
+              req.session.cookie
+            )}`
+          );
+        }
       }
     }
   });
@@ -168,8 +271,58 @@ app.post(
           res
             .status(200)
             .send({ message: "New Best Score! Next level unlocked!" });
+          if (req.session.user.UserType_ID === 1) {
+            logger.info(
+              `IP: ${req.ip}, Username: ${
+                req.session.user.User_Name
+              }, User Type: Anonymous, Action: Updated Easy Score & Updated Level,  Cookie: ${JSON.stringify(
+                req.session.cookie
+              )}`
+            );
+          } else if (req.session.user.UserType_ID === 2) {
+            logger.info(
+              `IP: ${req.ip}, Username: ${
+                req.session.user.User_Name
+              }, User Type: Registered, Action: Updated Easy Score & Updated Level, Cookie: ${JSON.stringify(
+                req.session.cookie
+              )}`
+            );
+          } else if (req.session.user.UserType_ID === 3) {
+            logger.info(
+              `IP: ${req.ip}, Username: ${
+                req.session.user.User_Name
+              }, User Type: Administrator, Action: Updated Easy Score & Updated Level, Cookie: ${JSON.stringify(
+                req.session.cookie
+              )}`
+            );
+          }
         } else if (newScore === 200) {
           res.status(200).send({ message: "New Best Score!" });
+          if (req.session.user.UserType_ID === 1) {
+            logger.info(
+              `IP: ${req.ip}, Username: ${
+                req.session.user.User_Name
+              }, User Type: Anonymous, Action: Updated Easy Score,  Cookie: ${JSON.stringify(
+                req.session.cookie
+              )}`
+            );
+          } else if (req.session.user.UserType_ID === 2) {
+            logger.info(
+              `IP: ${req.ip}, Username: ${
+                req.session.user.User_Name
+              }, User Type: Registered, Action: Updated Easy Score, Cookie: ${JSON.stringify(
+                req.session.cookie
+              )}`
+            );
+          } else if (req.session.user.UserType_ID === 3) {
+            logger.info(
+              `IP: ${req.ip}, Username: ${
+                req.session.user.User_Name
+              }, User Type: Administrator, Action: Updated Easy Score, Cookie: ${JSON.stringify(
+                req.session.cookie
+              )}`
+            );
+          }
         }
       });
     }
@@ -192,8 +345,58 @@ app.post(
           res
             .status(200)
             .send({ message: "New Best Score! Next level unlocked!" });
+          if (req.session.user.UserType_ID === 1) {
+            logger.info(
+              `IP: ${req.ip}, Username: ${
+                req.session.user.User_Name
+              }, User Type: Anonymous, Action: Updated Medium Score & Updated Level,  Cookie: ${JSON.stringify(
+                req.session.cookie
+              )}`
+            );
+          } else if (req.session.user.UserType_ID === 2) {
+            logger.info(
+              `IP: ${req.ip}, Username: ${
+                req.session.user.User_Name
+              }, User Type: Registered, Action: Updated Medium Score & Updated Level, Cookie: ${JSON.stringify(
+                req.session.cookie
+              )}`
+            );
+          } else if (req.session.user.UserType_ID === 3) {
+            logger.info(
+              `IP: ${req.ip}, Username: ${
+                req.session.user.User_Name
+              }, User Type: Administrator, Action: Updated Medium Score & Updated Level, Cookie: ${JSON.stringify(
+                req.session.cookie
+              )}`
+            );
+          }
         } else if (newScore === 200) {
           res.status(200).send({ message: "New Best Score!" });
+          if (req.session.user.UserType_ID === 1) {
+            logger.info(
+              `IP: ${req.ip}, Username: ${
+                req.session.user.User_Name
+              }, User Type: Anonymous, Action: Updated Medium Score,  Cookie: ${JSON.stringify(
+                req.session.cookie
+              )}`
+            );
+          } else if (req.session.user.UserType_ID === 2) {
+            logger.info(
+              `IP: ${req.ip}, Username: ${
+                req.session.user.User_Name
+              }, User Type: Registered, Action: Updated Medium Score, Cookie: ${JSON.stringify(
+                req.session.cookie
+              )}`
+            );
+          } else if (req.session.user.UserType_ID === 3) {
+            logger.info(
+              `IP: ${req.ip}, Username: ${
+                req.session.user.User_Name
+              }, User Type: Administrator, Action: Updated Medium Score, Cookie: ${JSON.stringify(
+                req.session.cookie
+              )}`
+            );
+          }
         }
       });
     }
@@ -213,6 +416,31 @@ app.post(
           res.status(200).send({ message: "Better luck next time" });
         } else {
           res.status(200).send({ message: "New Best Score!" });
+          if (req.session.user.UserType_ID === 1) {
+            logger.info(
+              `IP: ${req.ip}, Username: ${
+                req.session.user.User_Name
+              }, User Type: Anonymous, Action: Updated Hard Score & Updated Level,  Cookie: ${JSON.stringify(
+                req.session.cookie
+              )}`
+            );
+          } else if (req.session.user.UserType_ID === 2) {
+            logger.info(
+              `IP: ${req.ip}, Username: ${
+                req.session.user.User_Name
+              }, User Type: Registered, Action: Updated Hard Score & Updated Level, Cookie: ${JSON.stringify(
+                req.session.cookie
+              )}`
+            );
+          } else if (req.session.user.UserType_ID === 3) {
+            logger.info(
+              `IP: ${req.ip}, Username: ${
+                req.session.user.User_Name
+              }, User Type: Administrator, Action: Updated Hard Score & Updated Level, Cookie: ${JSON.stringify(
+                req.session.cookie
+              )}`
+            );
+          }
         }
       });
     }
@@ -245,6 +473,31 @@ app.post(
         } else {
           req.session.user.User_Theme = cb;
           res.status(200).send({ message: "success", code: 200 });
+          if (req.session.user.UserType_ID === 1) {
+            logger.info(
+              `IP: ${req.ip}, Username: ${
+                req.session.user.User_Name
+              }, User Type: Anonymous, Action: Updated Theme, Cookie: ${JSON.stringify(
+                req.session.cookie
+              )}`
+            );
+          } else if (req.session.user.UserType_ID === 2) {
+            logger.info(
+              `IP: ${req.ip}, Username: ${
+                req.session.user.User_Name
+              }, User Type: Registered, Action: Updated Theme, Cookie: ${JSON.stringify(
+                req.session.cookie
+              )}`
+            );
+          } else if (req.session.user.UserType_ID === 3) {
+            logger.info(
+              `IP: ${req.ip}, Username: ${
+                req.session.user.User_Name
+              }, User Type: Administrator, Action: Updated Theme, Cookie: ${JSON.stringify(
+                req.session.cookie
+              )}`
+            );
+          }
         }
       });
     }
@@ -267,6 +520,31 @@ app.post(
         } else {
           req.session.user.User_Picture = cb;
           res.status(200).send({ message: "success", code: 200 });
+          if (req.session.user.UserType_ID === 1) {
+            logger.info(
+              `IP: ${req.ip}, Username: ${
+                req.session.user.User_Name
+              }, User Type: Anonymous, Action: Updated Picture,  Cookie: ${JSON.stringify(
+                req.session.cookie
+              )}`
+            );
+          } else if (req.session.user.UserType_ID === 2) {
+            logger.info(
+              `IP: ${req.ip}, Username: ${
+                req.session.user.User_Name
+              }, User Type: Registered, Action: Updated Picture, Cookie: ${JSON.stringify(
+                req.session.cookie
+              )}`
+            );
+          } else if (req.session.user.UserType_ID === 3) {
+            logger.info(
+              `IP: ${req.ip}, Username: ${
+                req.session.user.User_Name
+              }, User Type: Administrator, Action: Updated Picture, Cookie: ${JSON.stringify(
+                req.session.cookie
+              )}`
+            );
+          }
         }
       });
     }
@@ -288,6 +566,31 @@ app.post(
           console.log(req.session.user);
           req.session.user.User_Bio = cb;
           res.status(200).send({ message: cb, code: 200 });
+          if (req.session.user.UserType_ID === 1) {
+            logger.info(
+              `IP: ${req.ip}, Username: ${
+                req.session.user.User_Name
+              }, User Type: Anonymous, Action: Updated Biography,  Cookie: ${JSON.stringify(
+                req.session.cookie
+              )}`
+            );
+          } else if (req.session.user.UserType_ID === 2) {
+            logger.info(
+              `IP: ${req.ip}, Username: ${
+                req.session.user.User_Name
+              }, User Type: Registered, Action: Updated Biography, Cookie: ${JSON.stringify(
+                req.session.cookie
+              )}`
+            );
+          } else if (req.session.user.UserType_ID === 3) {
+            logger.info(
+              `IP: ${req.ip}, Username: ${
+                req.session.user.User_Name
+              }, User Type: Administrator, Action: Updated Biography, Cookie: ${JSON.stringify(
+                req.session.cookie
+              )}`
+            );
+          }
         }
       }
     });

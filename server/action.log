@@ -1,0 +1,2 @@
+{"message":"IP: ::1, Username: testuser, User Type: Registered, Action: Logged In, Cookie: {\"originalMaxAge\":null,\"expires\":null,\"secure\":false,\"httpOnly\":true,\"path\":\"/\"}","level":"info","timestamp":"2021-05-06T08:34:34.417Z"}
+{"message":"IP: ::1, Username: testuser, User Type: Registered, Action: Logged Out, Cookie: {\"originalMaxAge\":null,\"expires\":null,\"secure\":false,\"httpOnly\":true,\"path\":\"/\"}","level":"info","timestamp":"2021-05-06T08:34:42.397Z"}

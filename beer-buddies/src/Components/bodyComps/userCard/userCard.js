@@ -56,6 +56,7 @@ const UserCard = () => {
   const [playerID, setPlayerID] = useState("");
   const [bio, setBio] = useState("");
   const [theme, setTheme] = useState("");
+  const localTheme = localStorage.getItem("theme");
   let PlayerID = User[0].User_ID;
   let Data = User[1];
   const [selectedValue, setSelectedValue] = useState("");
@@ -85,6 +86,7 @@ const UserCard = () => {
             setPlayerID(data.User.User_ID);
             setBio(data.User.User_Bio);
             setTheme(data.User.User_Theme);
+            localStorage.setItem("theme", theme);
             setSelectedPic(data.User.User_Picture);
             setData(true);
             setLoggedIn(true);
@@ -745,10 +747,10 @@ const UserCard = () => {
                 width: 75,
                 height: 75,
                 margin: "20px",
-                border: `${theme} solid 3px`,
+                border: `${localTheme} solid 3px`,
               }}
               src={`/cards/${User[0].User_Picture}.png`}
-              alt="coors beer logo"
+              alt="User_Picture"
             />
           ) : (
             <div
