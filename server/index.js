@@ -182,6 +182,7 @@ app.get("/user", (req, res) => {
 });
 
 app.get("/logout", (req, res) => {
+  console.log(req.session.user);
   if (req.session.user.UserType_ID === 1) {
     logger.info(
       `IP: ${req.ip}, Username: ${
@@ -216,6 +217,8 @@ app.get("/scores", (req, res) => {
 });
 
 app.post("/userScores", body("id").isNumeric(), (req, res) => {
+  console.log(req.session.user);
+  console.log("req.session");
   db.userScores(req, (scores) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -597,6 +600,4 @@ app.post(
   }
 );
 
-app.listen(3001, () => {
-  console.log("running on port 3001");
-});
+module.exports = app;

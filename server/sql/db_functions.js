@@ -366,6 +366,7 @@ const scores = (res) => {
 
 const userScores = (req, scores) => {
   const Id = req.body.id;
+  console.log(Id);
 
   const userscores =
     "SELECT Best_Score, DATE_FORMAT(Score_Date, '%d/%m/%Y') AS 'Score_Date' FROM Leaderboards WHERE User_ID = ? ORDER BY Game_ID ASC;";
@@ -375,8 +376,8 @@ const userScores = (req, scores) => {
       scores(400);
     }
     if (result) {
-      scores(result);
       console.log(result);
+      scores(result);
     }
   });
 };

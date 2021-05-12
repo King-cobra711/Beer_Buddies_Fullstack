@@ -55,12 +55,14 @@ const UserCard = () => {
   const [update, setUpdate] = useState(false);
   const [playerID, setPlayerID] = useState("");
   const [bio, setBio] = useState("");
+  const localBio = localStorage.getItem("bio");
   const [theme, setTheme] = useState("");
   const localTheme = localStorage.getItem("theme");
   let PlayerID = User[0].User_ID;
   let Data = User[1];
   const [selectedValue, setSelectedValue] = useState("");
   const [selectedPic, setSelectedPic] = useState("");
+  const localPic = localStorage.getItem("pic");
 
   const handleChangeTheme = (event) => {
     setSelectedValue(event.target.value);
@@ -86,8 +88,10 @@ const UserCard = () => {
             setPlayerID(data.User.User_ID);
             setBio(data.User.User_Bio);
             setTheme(data.User.User_Theme);
-            localStorage.setItem("theme", theme);
+            localStorage.setItem("theme", localTheme);
+            localStorage.setItem("bio", localBio);
             setSelectedPic(data.User.User_Picture);
+            localStorage.setItem("pic", localPic);
             setData(true);
             setLoggedIn(true);
           } else if (data.loggedIn === false) {
@@ -101,7 +105,9 @@ const UserCard = () => {
   }, [data]);
 
   useEffect(() => {
+    console.log(PlayerID);
     if (typeof PlayerID !== "undefined") {
+      console.log(PlayerID);
       async function fetchAPI() {
         setLoaded(false);
         const request = await fetch("http://localhost:3001/userScores", {
@@ -109,6 +115,7 @@ const UserCard = () => {
           headers: {
             "Content-type": "application/json",
           },
+          credentials: "include",
           body: JSON.stringify({ id: PlayerID }),
         }).then((res) => {
           if (res.status === 200) {
