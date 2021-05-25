@@ -32,9 +32,11 @@ const AdminMenu = () => {
   const [errorMessage, seterrorMessage] = useState("");
   const [allUsers, setAllUsers] = useState([]);
   const [searchTerms, setSearchTerms] = useState("");
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     setLoaded(false);
+    setRefresh(false);
 
     fetch("http://localhost:3001/AdminUserSearch", {
       method: "GET",
@@ -47,10 +49,11 @@ const AdminMenu = () => {
         .json()
         .then((response) => {
           setAllUsers(response.users);
+          console.log("reloading users", userName);
         })
         .then(setLoaded(true));
     });
-  }, [userName]);
+  }, [refresh]);
 
   return (
     <div>
@@ -129,10 +132,9 @@ const AdminMenu = () => {
               <div
                 className={classes.userlist}
                 onClick={() => {
-                  seterrorMessage("");
                   setUserName(val.User_Name);
-                  // console.log(userName);
-                  console.log(searchTerms);
+                  console.log(val.User_Name);
+                  console.log("Username above");
                 }}
               >
                 <Mui.Grid container spacing={0}>
@@ -177,8 +179,6 @@ const AdminMenu = () => {
                     <CustomButton
                       onClick={() => {
                         setSearchTerms("");
-                        setUserName(val.User_Name);
-                        console.log(userName);
                         fetch("http://localhost:3001/Admin/DeleteUser", {
                           method: "POST",
                           headers: {
@@ -186,12 +186,18 @@ const AdminMenu = () => {
                           },
                           credentials: "include",
                           body: JSON.stringify({
-                            name: userName,
+                            name: val.User_Name,
                           }),
                         }).then((res) => {
                           console.log(res);
+                          console.log(res.status);
                           if (res.status === 400) {
                             seterrorMessage("User doesn't exist");
+                          } else if (res.status === 200) {
+                            setUserName("");
+                            setRefresh(true);
+                            console.log(userName);
+                            console.log("upo hereifoh");
                           }
                         });
                       }}

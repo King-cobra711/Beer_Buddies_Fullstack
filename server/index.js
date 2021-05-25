@@ -27,7 +27,7 @@ const logger = createLogger({
 
 const limiter = rateLimit({
   windowMs: 1000, // 1 second
-  max: 10, // limit each IP to 10 requests per windowMs
+  max: 100, // limit each IP to 10 requests per windowMs
   message: "Too many requests",
 });
 const accountLimiter = rateLimit({
@@ -608,7 +608,7 @@ app.post(
 app.get("/AdminUserSearch", (req, res) => {
   db.AdminUserSearch(req, (cb) => {
     if (cb === 400) {
-      res.status(400);
+      res.sendStatus(400);
     } else {
       res.status(200).send({ users: cb });
     }
@@ -620,7 +620,7 @@ app.post("/Admin/searchUser", (req, res) => {
     if (cb === 404) {
       res.status(400);
     } else {
-      res.status(200);
+      res.sendStatus(200);
     }
   });
 });
@@ -630,7 +630,7 @@ app.post("/Admin/DeleteUser", (req, res) => {
     if (cb === 404) {
       res.status(400).send({ message: "could not delete" });
     } else {
-      res.status(200);
+      res.sendStatus(200);
     }
   });
 });
