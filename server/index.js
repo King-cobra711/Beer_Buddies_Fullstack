@@ -170,7 +170,7 @@ app.get("/login", accountLimiter, (req, res) => {
   if (req.session.user) {
     res.status(200).send({ loggedIn: true, User: req.session.user });
   } else {
-    res.status(401).send({ loggedIn: false });
+    res.status(200).send({ loggedIn: false });
   }
 });
 app.get("/user", (req, res) => {
@@ -217,8 +217,6 @@ app.get("/scores", (req, res) => {
 });
 
 app.post("/userScores", body("id").isNumeric(), (req, res) => {
-  console.log(req.session.user);
-  console.log("req.session");
   db.userScores(req, (scores) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -228,6 +226,13 @@ app.post("/userScores", body("id").isNumeric(), (req, res) => {
         res.status(400).send({ error: "error" });
       } else {
         res.status(200).send({ UserScores: scores });
+        logger.info(
+          `IP: ${req.ip}, Username: ${req.session.user.User_Name}, User Type: ${
+            req.session.user.UserType_ID
+          }, Action: Retrieved User Scores (Easy, Medium, Hard), Cookie: ${JSON.stringify(
+            req.session.cookie
+          )}`
+        );
         if (req.session.user.UserType_ID === 1) {
           logger.info(
             `IP: ${req.ip}, Username: ${
@@ -599,5 +604,35 @@ app.post(
     });
   }
 );
+
+app.get("/AdminUserSearch", (req, res) => {
+  db.AdminUserSearch(req, (cb) => {
+    if (cb === 400) {
+      res.status(400);
+    } else {
+      res.status(200).send({ users: cb });
+    }
+  });
+});
+
+app.post("/Admin/searchUser", (req, res) => {
+  db.SearchUser(req, (cb) => {
+    if (cb === 404) {
+      res.status(400);
+    } else {
+      res.status(200);
+    }
+  });
+});
+
+app.post("/Admin/DeleteUser", (req, res) => {
+  db.DeleteUser(req, (cb) => {
+    if (cb === 404) {
+      res.status(400).send({ message: "could not delete" });
+    } else {
+      res.status(200);
+    }
+  });
+});
 
 module.exports = app;

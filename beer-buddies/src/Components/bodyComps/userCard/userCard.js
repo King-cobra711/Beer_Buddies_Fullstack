@@ -188,7 +188,6 @@ const UserCard = () => {
                   color="default"
                   size="medium"
                   onClick={handleOpenTheme}
-                  // component={ Link } to="/difficulty"
                   endIcon={
                     <Mui.Icon style={{ marginLeft: 5 }}>gradient</Mui.Icon>
                   }
@@ -223,7 +222,6 @@ const UserCard = () => {
                   color="default"
                   size="medium"
                   onClick={handleOpenPic}
-                  // component={ Link } to="/difficulty"
                   endIcon={<Mui.Icon style={{ marginLeft: 5 }}>photo</Mui.Icon>}
                 >
                   Picture

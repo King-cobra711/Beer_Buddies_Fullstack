@@ -5,15 +5,22 @@ import * as Mui from "@material-ui/core";
 import WelcomeMessage from "../Components/headerComps/welcomeMessage";
 
 import classes from "./headerWelcome.module.css";
+import { useHistory } from "react-router-dom";
 
 const HeaderWelcome = () => {
   const [color, setColor] = useState("");
   const [loaded, setLoaded] = useState(false);
   const [signUp, setSignUp] = useState(false);
 
+  let history = useHistory();
+
   let data = User()[1];
   let userTheme = User()[0].User_Theme;
   let In = User()[2];
+
+  const home = () => {
+    history.push("/");
+  };
 
   useEffect(() => {
     setLoaded(false);
@@ -33,6 +40,7 @@ const HeaderWelcome = () => {
       {loaded ? (
         <div className={classes.MainContainer}>
           <div
+            onClick={() => home()}
             className={classes.Background}
             style={{ borderColor: `${color}` }}
           ></div>

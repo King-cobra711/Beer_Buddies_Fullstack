@@ -16,10 +16,11 @@ import Login from "./Components/bodyComps/loginRegister/login";
 import Register from "./Components/bodyComps/register/register";
 import Leaderboards from "./Components/bodyComps/leaderboards/leaderboard";
 import UserCard from "./Components/bodyComps/userCard/userCard";
+import AdminMenu from "./Admin/adminMenu";
 
 function App() {
   const [loginStatus, setLoginStatus] = useState(false);
-  const [userDetails, setUserDetails] = useState("");
+  const [userInfo, setUserInfo] = useState([{ UserType_ID: 0 }]);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -39,20 +40,14 @@ function App() {
           if (res.status === 200) {
             res.json().then((data) => {
               setLoginStatus(data.loggedIn);
-              console.log(data.loggedIn);
-              console.log(loginStatus);
-              setLoaded(true);
-            });
-          } else if (res.status === 401) {
-            res.json().then((data) => {
-              console.log(data);
-              setLoginStatus(data.loggedIn);
-              console.log(loginStatus);
+              if (data.User) {
+                setUserInfo(data.User);
+              }
               setLoaded(true);
             });
           } else {
             res.json().then((data) => {
-              console.log(data);
+              console.log("Error");
               setLoaded(true);
             });
           }
@@ -66,24 +61,34 @@ function App() {
   return (
     <BrowserRouter>
       <div className="App">
-        {/* <Route
-          path="/"
-          render={() => {
-            if (loginStatus) {
-              return <HeaderWelcome />;
-            } else {
-              return <Header />;
-            }
-          }}
-        ></Route> */}
-
         <Route path="/" render={() => <HeaderWelcome />}></Route>
+
         <Route path="/" exact render={() => <MainMenu />}></Route>
-
+        {loaded ? (
+          <Route
+            path="/Admin"
+            exact
+            render={() => {
+              if (userInfo.UserType_ID === 1) {
+                return <AdminMenu />;
+              } else {
+                return <Redirect to="/login" />;
+              }
+            }}
+          ></Route>
+        ) : (
+          <Mui.LinearProgress
+            style={{
+              colorPrimary: "rgb(255, 255, 24)",
+              backgroundColor: "black",
+              margin: "auto",
+              marginTop: "60%",
+              width: "80%",
+            }}
+          />
+        )}
         <Route path="/difficulty" render={() => <ChooseDifficulty />}></Route>
-
         <Route path="/easy" render={() => <Easy />}></Route>
-
         {loaded ? (
           <Route
             path="/register"
@@ -128,9 +133,7 @@ function App() {
             }}
           />
         )}
-
         <Route path="/leaderboards" render={() => <Leaderboards />}></Route>
-
         {loaded ? (
           <Route
             path="/medium"

@@ -97,6 +97,8 @@ const WelcomeMessage = () => {
             {loaded ? (
               userType === 1 ? (
                 <Mui.MenuItem
+                  component={Link}
+                  to="/Admin"
                   onClick={handleClose}
                   style={{ borderTop: "grey solid" }}
                 >

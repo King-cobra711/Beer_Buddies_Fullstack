@@ -366,8 +366,6 @@ const scores = (res) => {
 
 const userScores = (req, scores) => {
   const Id = req.body.id;
-  console.log(Id);
-
   const userscores =
     "SELECT Best_Score, DATE_FORMAT(Score_Date, '%d/%m/%Y') AS 'Score_Date' FROM Leaderboards WHERE User_ID = ? ORDER BY Game_ID ASC;";
   db.query(userscores, [Id], (err, result) => {
@@ -378,6 +376,61 @@ const userScores = (req, scores) => {
     if (result) {
       console.log(result);
       scores(result);
+    }
+  });
+};
+
+// Admin
+
+const AdminUserSearch = (req, cb) => {
+  const users =
+    "SELECT User_ID, User_Name, User_Picture FROM User ORDER BY User_Name ASC;";
+  db.query(users, (err, result) => {
+    if (err) {
+      console.log(err);
+      cb(400);
+    }
+    if (result) {
+      console.log(result);
+      cb(result);
+    }
+  });
+};
+const SearchUser = (req, cb) => {
+  const Name = req.body.name;
+  const user = "SELECT User_Name FROM User WHERE User_Name = ?";
+  db.query(user, [Name], (err, result) => {
+    console.log(result);
+    if (err) {
+      console.log(err);
+      cb(400);
+    }
+    if (result.length > 0) {
+      console.log("yes");
+      cb(200);
+    } else {
+      console.log("no");
+      cb(404);
+    }
+  });
+};
+const DeleteUser = (req, cb) => {
+  const Name = req.body.name;
+  console.log(Name);
+  console.log("Name above");
+  const user = "DELETE FROM User WHERE User_Name = ?";
+  db.query(user, [Name], (err, result) => {
+    console.log(result);
+    if (err) {
+      console.log(err);
+      cb(400);
+    }
+    if (result) {
+      console.log("yes");
+      cb(200);
+    } else {
+      console.log("no");
+      cb(404);
     }
   });
 };
@@ -394,4 +447,7 @@ module.exports = {
   updateUserBio: updateUserBio,
   updateUserTheme: updateUserTheme,
   updateUserPic: updateUserPic,
+  AdminUserSearch: AdminUserSearch,
+  SearchUser: SearchUser,
+  DeleteUser: DeleteUser,
 };
