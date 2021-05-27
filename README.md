@@ -27,8 +27,6 @@ These will be subject to change depending on what your MAMP/MySQL setup is. Make
 - Open the terminal and use the `cd` to navigate to your desktop or your preffered location to store this project.
 - Once there use the command `mkdir Beer_Buddies` to create a new folder entitled Beer_Buddies.
 - Now use the command `git clone https://github.com/King-cobra711/Beer_Buddies_Fullstack.git` to copy the project files from the github repository
-- Create a new database in MAMP/MySQL
-  https://github.com/King-cobra711/Beer_Buddies_Fullstack.git
 
 ### Database setup
 
