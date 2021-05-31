@@ -634,5 +634,32 @@ app.post("/Admin/DeleteUser", (req, res) => {
     }
   });
 });
+app.get("/UserTypes", (req, res) => {
+  db.UserTypes(req, (cb) => {
+    if (cb === 404) {
+      res.status(400).send({ message: "error" });
+    } else {
+      res.status(200).send({ usertypes: cb });
+    }
+  });
+});
+app.post("/NewUserTypes", (req, res) => {
+  db.AddUserTypes(req, (cb) => {
+    if (cb === 404) {
+      res.status(400).send({ message: "error" });
+    } else {
+      res.status(200).send({ message: "user type added" });
+    }
+  });
+});
+app.post("/deleteUserType", (req, res) => {
+  db.DeleteUserType(req, (cb) => {
+    if (cb === 404) {
+      res.status(400).send({ message: "error" });
+    } else {
+      res.status(200).send({ message: "user type added" });
+    }
+  });
+});
 
 module.exports = app;

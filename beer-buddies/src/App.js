@@ -17,6 +17,8 @@ import Register from "./Components/bodyComps/register/register";
 import Leaderboards from "./Components/bodyComps/leaderboards/leaderboard";
 import UserCard from "./Components/bodyComps/userCard/userCard";
 import AdminMenu from "./Admin/adminMenu";
+import AdminAddUserType from "./Admin/adminAddUserType";
+import AdminEditUser from "./Admin/adminEditUser";
 
 function App() {
   const [loginStatus, setLoginStatus] = useState(false);
@@ -71,6 +73,60 @@ function App() {
             render={() => {
               if (userInfo.UserType_ID === 1) {
                 return <AdminMenu />;
+              } else {
+                return <Redirect to="/login" />;
+              }
+            }}
+          ></Route>
+        ) : (
+          <Mui.LinearProgress
+            style={{
+              colorPrimary: "rgb(255, 255, 24)",
+              backgroundColor: "black",
+              margin: "auto",
+              marginTop: "60%",
+              width: "80%",
+            }}
+          />
+        )}
+        {loaded ? (
+          <Route
+            path="/Admin/UserTypes"
+            exact
+            render={() => {
+              if (loginStatus === true) {
+                if (userInfo.UserType_ID === 1) {
+                  return <AdminAddUserType />;
+                } else {
+                  return <Redirect to="/login" />;
+                }
+              } else {
+                return <Redirect to="/login" />;
+              }
+            }}
+          ></Route>
+        ) : (
+          <Mui.LinearProgress
+            style={{
+              colorPrimary: "rgb(255, 255, 24)",
+              backgroundColor: "black",
+              margin: "auto",
+              marginTop: "60%",
+              width: "80%",
+            }}
+          />
+        )}
+        {loaded ? (
+          <Route
+            path="/Admin/EditUser/:name"
+            exact
+            render={() => {
+              if (loginStatus === true) {
+                if (userInfo.UserType_ID === 1) {
+                  return <AdminEditUser />;
+                } else {
+                  return <Redirect to="/login" />;
+                }
               } else {
                 return <Redirect to="/login" />;
               }

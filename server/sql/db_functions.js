@@ -434,6 +434,61 @@ const DeleteUser = (req, cb) => {
     }
   });
 };
+const UserTypes = (req, cb) => {
+  const userTypes = "Select * From User_Type";
+  db.query(userTypes, (err, result) => {
+    if (err) {
+      console.log(err);
+      cb(400);
+    }
+    if (result) {
+      console.log("yes" + result[0]);
+      cb(result);
+    } else {
+      console.log("no");
+      cb(404);
+    }
+  });
+};
+const AddUserTypes = (req, cb) => {
+  const newType = req.body.ntype;
+  console.log(newType + "<-- New type here");
+  const sql = "INSERT INTO User_Type (User_Type_Name) VALUES (?);";
+  db.query(sql, [newType], (err, result) => {
+    if (err) {
+      console.log(err);
+      cb(400);
+    }
+    if (result) {
+      console.log("yes" + result[0]);
+      cb(200);
+    } else {
+      console.log("no");
+      cb(404);
+    }
+  });
+};
+
+const DeleteUserType = (req, cb) => {
+  const Name = req.body.deltype;
+  console.log(Name);
+  console.log("Name above");
+  const user = "DELETE FROM User_Type WHERE User_Type_Name = ?";
+  db.query(user, [Name], (err, result) => {
+    console.log(result);
+    if (err) {
+      console.log(err);
+      cb(400);
+    }
+    if (result) {
+      console.log("yes");
+      cb(200);
+    } else {
+      console.log("no");
+      cb(404);
+    }
+  });
+};
 
 module.exports = {
   checkRegistrationDetails: checkRegistrationDetails,
@@ -450,4 +505,7 @@ module.exports = {
   AdminUserSearch: AdminUserSearch,
   SearchUser: SearchUser,
   DeleteUser: DeleteUser,
+  UserTypes: UserTypes,
+  AddUserTypes: AddUserTypes,
+  DeleteUserType: DeleteUserType,
 };

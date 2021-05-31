@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import * as Mui from "@material-ui/core";
 import classes from "./adminMenu.module.css";
 import { withStyles } from "@material-ui/core/styles";
+import { useHistory } from "react-router-dom";
 
 const AdminMenu = () => {
   const CustomButton = withStyles({
@@ -34,6 +35,11 @@ const AdminMenu = () => {
   const [searchTerms, setSearchTerms] = useState("");
   const [refresh, setRefresh] = useState(false);
 
+  let history = useHistory();
+  const home = () => {
+    history.push("/");
+  };
+
   useEffect(() => {
     setLoaded(false);
     setRefresh(false);
@@ -57,6 +63,16 @@ const AdminMenu = () => {
 
   return (
     <div>
+      <ul className={classes.Navbar}>
+        <li>
+          <button onClick={() => home()}>Main Menu</button>
+        </li>
+        <li>
+          <Link to="/Admin/UserTypes">
+            <button>Add User Type</button>
+          </Link>
+        </li>
+      </ul>
       <Mui.Grid container spacing={0} style={{ width: "90%", margin: "auto" }}>
         <Mui.Grid item xs={9}>
           <input
@@ -89,6 +105,8 @@ const AdminMenu = () => {
                 console.log(res);
                 if (res.status === 400) {
                   seterrorMessage("User doesn't exist");
+                } else if (res.status === 200) {
+                  history.push("/Admin/EditUser/" + searchName);
                 }
               });
             }}
@@ -96,7 +114,7 @@ const AdminMenu = () => {
             color="default"
             size="large"
             style={{
-              marginTop: "20px",
+              marginTop: "10px",
               marginLeft: "15px",
               width: "40px",
               height: "40px",

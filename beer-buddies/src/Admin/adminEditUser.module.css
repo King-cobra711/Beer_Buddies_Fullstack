@@ -1,0 +1,51 @@
+body {
+  font-family: "DotGothic16", sans-serif;
+}
+.Display {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 3px rgb(255, 255, 24) solid;
+  background-color: rgba(0, 0, 0, 0.76);
+  margin: auto;
+  margin-top: 10px;
+}
+.Display button {
+  width: 80%;
+  margin: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-size: 0.8em;
+  font-family: "DotGothic16", sans-serif;
+}
+.Display a {
+  width: 80%;
+  margin: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-size: 0.8em;
+  font-family: "DotGothic16", sans-serif;
+}
+.inputRegister {
+  width: 80%;
+  margin: 15px;
+  font-size: 1.2em;
+  font-family: "DotGothic16", sans-serif;
+}
+.errorMessage {
+  color: rgb(255, 251, 0);
+  font-size: 1em;
+  margin: 4px;
+}
+@media screen and (min-width: 388px) {
+  .Display button {
+    font-size: 1.1em;
+  }
+  .Display a {
+    font-size: 1.1em;
+  }
+  .inputRegister {
+    font-size: 1.4em;
+  }
+}
