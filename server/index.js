@@ -661,5 +661,14 @@ app.post("/deleteUserType", (req, res) => {
     }
   });
 });
+app.post("/AdminUserSearchInfo", (req, res) => {
+  db.AdminGetUser(req, (cb) => {
+    if (cb === 404) {
+      res.status(400).send({ message: "error" });
+    } else {
+      res.status(200).send({ userInfo: cb });
+    }
+  });
+});
 
 module.exports = app;

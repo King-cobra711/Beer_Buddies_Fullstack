@@ -475,14 +475,32 @@ const DeleteUserType = (req, cb) => {
   console.log("Name above");
   const user = "DELETE FROM User_Type WHERE User_Type_Name = ?";
   db.query(user, [Name], (err, result) => {
-    console.log(result);
+    if (err) {
+      console.log(err);
+      cb(400);
+    }
+    if (result.length > 0) {
+      console.log("yes" + result);
+      cb(200);
+    } else {
+      console.log("no");
+      cb(404);
+    }
+  });
+};
+const AdminGetUser = (req, cb) => {
+  const Name = req.body.username;
+  console.log(Name + "<------Name");
+  const user =
+    "SELECT UserType_ID, User_Name, User_Email, User_Bio, User_Picture, User_Theme, User_Blacklist_Status, User_Level FROM User WHERE User_Name = ?;";
+  db.query(user, [Name], (err, result) => {
     if (err) {
       console.log(err);
       cb(400);
     }
     if (result) {
       console.log("yes");
-      cb(200);
+      cb(result);
     } else {
       console.log("no");
       cb(404);
@@ -508,4 +526,5 @@ module.exports = {
   UserTypes: UserTypes,
   AddUserTypes: AddUserTypes,
   DeleteUserType: DeleteUserType,
+  AdminGetUser: AdminGetUser,
 };
