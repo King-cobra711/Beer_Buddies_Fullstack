@@ -62,3 +62,15 @@ There was no .ENV file uploaded to this repository however for assessment purpos
 
 1. `cd /Users/Matt/Desktop/Beer Buddies/server`
 2. `npm run devStart`
+
+## Login
+
+### Admin
+
+Username: KingCob,
+Password: Admin711
+
+### Registered user
+
+Username: testuser,
+Password: aaaaaa
