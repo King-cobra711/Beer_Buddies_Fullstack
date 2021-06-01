@@ -507,6 +507,34 @@ const AdminGetUser = (req, cb) => {
     }
   });
 };
+const AdminUpdateUser = (req, cb) => {
+  const Name = req.body.name;
+  const Biography = req.body.biography;
+  const Picture = req.body.picture;
+  const Theme = req.body.theme;
+  const Blacklist = req.body.blacklistStatus;
+  const Level = req.body.userLevel;
+  console.log(Biography + "<------Name");
+  const updateUser =
+    "UPDATE User SET User_Bio = ?, User_Picture = ?, User_Theme = ?, User_Blacklist_Status = ?, User_Level = ? WHERE User_Name = ? ;";
+  db.query(
+    updateUser,
+    [Biography, Picture, Theme, Blacklist, Level, Name],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+        cb(400);
+      }
+      if (result) {
+        console.log("yes");
+        cb(200);
+      } else {
+        console.log("no");
+        cb(404);
+      }
+    }
+  );
+};
 
 module.exports = {
   checkRegistrationDetails: checkRegistrationDetails,
@@ -527,4 +555,5 @@ module.exports = {
   AddUserTypes: AddUserTypes,
   DeleteUserType: DeleteUserType,
   AdminGetUser: AdminGetUser,
+  AdminUpdateUser: AdminUpdateUser,
 };

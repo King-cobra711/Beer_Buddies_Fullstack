@@ -15,6 +15,12 @@ const AdminEditUser = () => {
   const [userInfo, setUserInfo] = useState({});
   const [loaded, setLoaded] = useState(false);
 
+  let history = useHistory();
+
+  const home = () => {
+    history.push("/");
+  };
+
   useEffect(() => {
     setLoaded(false);
     fetch("http://localhost:3001/AdminUserSearchInfo", {
@@ -24,7 +30,7 @@ const AdminEditUser = () => {
       },
       credentials: "include",
       body: JSON.stringify({
-        username: "beergirl",
+        username: params.name,
       }),
     }).then((res) => {
       if (res.status === 200) {
@@ -41,11 +47,20 @@ const AdminEditUser = () => {
 
   return (
     <div>
+      <ul className={classes.Navbar}>
+        <li>
+          <Link to="/Admin">
+            <button>Admin Menu</button>
+          </Link>
+        </li>
+        <li>
+          <button onClick={() => home()}>Main Menu</button>
+        </li>
+      </ul>
       {loaded ? (
         <Formik
           initialValues={{
-            Email: userInfo.User_Email,
-            Username: userInfo.User_Name,
+            name: userInfo.User_Name,
             biography: userInfo.User_Bio,
             picture: userInfo.User_Picture,
             theme: userInfo.User_Theme,
@@ -54,7 +69,7 @@ const AdminEditUser = () => {
           }}
           validationSchema={userSchema}
           onSubmit={(fields) => {
-            fetch("http://localhost:3001/checkRegisterDetails", {
+            fetch("http://localhost:3001/AdminUpdateUser", {
               method: "POST",
               headers: {
                 "Content-type": "application/json",
@@ -63,56 +78,25 @@ const AdminEditUser = () => {
               body: JSON.stringify(fields),
             }).then((res) => {
               if (res.status === 200) {
-                fetch("http://localhost:3001/admin/editUser", {
-                  method: "POST",
-                  headers: {
-                    "Content-type": "application/json",
-                  },
-                  credentials: "include",
-                  body: JSON.stringify(fields),
-                }).then((res) => {
-                  if (res.status === 200) {
-                    res.json().then((data) => {});
-                  }
+                res.json().then((data) => {
+                  console.log(data.message);
+                  history.go(0);
                 });
               }
             });
           }}
         >
           <Form className={classes.Display}>
+            <h2>Username: {userInfo.User_Name}</h2>
+            <h2>Email: {userInfo.User_Email}</h2>
             <Field
-              name="Username"
-              type="text"
+              name="name"
+              type="hidden"
+              initialValues={userInfo.User_Name}
               placeholder={userInfo.User_Name}
               className={classes.inputRegister}
             />
-            <ErrorMessage
-              name="Username"
-              component="p"
-              className={classes.errorMessage}
-            />
-            <Field
-              name="Email"
-              type="text"
-              placeholder={userInfo.User_Email}
-              className={classes.inputRegister}
-            />
-            <ErrorMessage
-              name="Email"
-              component="p"
-              className={classes.errorMessage}
-            />
-            <Field
-              name="Password"
-              type="password"
-              placeholder="Password"
-              className={classes.inputRegister}
-            />
-            <ErrorMessage
-              name="Password"
-              component="p"
-              className={classes.errorMessage}
-            />
+            <h3>Biography</h3>
             <Field
               name="biography"
               type="text"
@@ -124,6 +108,7 @@ const AdminEditUser = () => {
               component="p"
               className={classes.errorMessage}
             />
+            <h3>Picture</h3>
             <Field
               name="picture"
               type="text"
@@ -135,6 +120,7 @@ const AdminEditUser = () => {
               component="p"
               className={classes.errorMessage}
             />
+            <h3>Theme</h3>
             <Field
               name="theme"
               type="text"
@@ -146,6 +132,7 @@ const AdminEditUser = () => {
               component="p"
               className={classes.errorMessage}
             />
+            <h3>Blacklist</h3>
             <Field
               name="blacklistStatus"
               type="text"
@@ -157,6 +144,7 @@ const AdminEditUser = () => {
               component="p"
               className={classes.errorMessage}
             />
+            <h3>User Level</h3>
             <Field
               name="userLevel"
               type="text"

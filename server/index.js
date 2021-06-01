@@ -670,5 +670,14 @@ app.post("/AdminUserSearchInfo", (req, res) => {
     }
   });
 });
+app.post("/AdminUpdateUser", (req, res) => {
+  db.AdminUpdateUser(req, (cb) => {
+    if (cb === 404) {
+      return res.status(400).send({ message: "error" });
+    } else {
+      return res.status(200).send({ message: "User Updated" });
+    }
+  });
+});
 
 module.exports = app;

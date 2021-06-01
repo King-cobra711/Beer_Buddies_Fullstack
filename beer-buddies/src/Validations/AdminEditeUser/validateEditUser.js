@@ -1,8 +1,6 @@
 import * as yup from "yup";
 
 export const userSchema = yup.object().shape({
-  Email: yup.string().email(),
-  Username: yup.string().min(3).max(15),
   Password: yup.string().min(6).max(20),
   biograpghy: yup.string().min(0).max(100),
   picture: yup
