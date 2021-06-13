@@ -43,6 +43,25 @@ const AdminMenu = () => {
   useEffect(() => {
     setLoaded(false);
     setRefresh(false);
+    fetch("http://localhost:3001/Whitelist", {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application.json",
+      },
+    }).then((res) => {
+      if (res.status === 200) {
+        setLoaded(true);
+      } else {
+        setLoaded(true);
+        history.push("/login");
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    setLoaded(false);
+    setRefresh(false);
 
     fetch("http://localhost:3001/AdminUserSearch", {
       method: "GET",

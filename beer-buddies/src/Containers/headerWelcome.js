@@ -1,6 +1,7 @@
 import { React, useEffect, useState } from "react";
 import User from "../hoc/user";
 import * as Mui from "@material-ui/core";
+import HelpIcon from "@material-ui/icons/Help";
 
 import WelcomeMessage from "../Components/headerComps/welcomeMessage";
 
@@ -43,7 +44,21 @@ const HeaderWelcome = () => {
             onClick={() => home()}
             className={classes.Background}
             style={{ borderColor: `${color}` }}
-          ></div>
+          >
+            <Mui.IconButton
+              href="/help"
+              size="small"
+              style={{
+                maxWidth: "20px",
+                maxHeight: "20px",
+                float: "right",
+                marginRight: "5px",
+                marginTop: "5px",
+              }}
+            >
+              <HelpIcon style={{ color: "white" }} />
+            </Mui.IconButton>
+          </div>
           {signUp ? <WelcomeMessage /> : null}
         </div>
       ) : (

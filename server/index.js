@@ -32,7 +32,7 @@ const limiter = rateLimit({
 });
 const accountLimiter = rateLimit({
   windowMs: 24 * 60 * 1000, // 24hours
-  max: 1000, // limit each IP to 1000 requests per windowMs
+  max: 100, // limit each IP to 100 requests per windowMs
   message: "Too many requests",
 });
 
@@ -75,7 +75,7 @@ app.post(
         console.log(status);
         if (status === 400) {
           res.status(409).send({
-            email: "email already in use",
+            email: "email not valid",
             user: "user already exists",
           });
         } else if (status === 406) {
@@ -93,7 +93,7 @@ app.post(
 app.post(
   "/register",
   body("Email").isEmail(),
-  body("Username").isLength({ min: 3, max: 15 }),
+  body("Username").isLength({ min: 3, max: 15 }).isAlphanumeric(),
   body("Password").isLength({ min: 6, max: 20 }),
   accountLimiter,
   (req, res) => {
@@ -166,6 +166,8 @@ app.post(
   }
 );
 
+// This route checks if a session exists. "user" is a key that is part of the seesion object and its value is an array that contains some user information such as username, useremail, etc. The key-value pair of user and user information is instantiated when a user successfully logs-in or registers, this can be seen on the post route for login or register.
+
 app.get("/login", accountLimiter, (req, res) => {
   if (req.session.user) {
     res.status(200).send({ loggedIn: true, User: req.session.user });
@@ -173,6 +175,7 @@ app.get("/login", accountLimiter, (req, res) => {
     res.status(200).send({ loggedIn: false });
   }
 });
+
 app.get("/user", (req, res) => {
   if (req.session.user) {
     res.status(200).send({ loggedIn: true, User: req.session.user });
@@ -678,6 +681,21 @@ app.post("/AdminUpdateUser", (req, res) => {
       return res.status(200).send({ message: "User Updated" });
     }
   });
+});
+
+app.get("/Whitelist", (req, res) => {
+  let whitelist = ["::1", "::ffff:127.0.0.1", process.env.ipadmin];
+  let address = req.ip;
+  let check = whitelist.includes(address);
+  if (req.session.user.UserType_ID === 1) {
+    if (check === true) {
+      res.sendStatus(200);
+    } else {
+      res.sendStatus(400);
+    }
+  } else {
+    res.sendStatus(400);
+  }
 });
 
 module.exports = app;

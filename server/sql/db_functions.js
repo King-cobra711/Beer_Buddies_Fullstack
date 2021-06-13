@@ -2,12 +2,15 @@ require("dotenv").config({ path: "/Users/Matt/Desktop/Beer Buddies/.env" });
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const mysql = require("mysql");
+
+// Database oject installed here. This seperates the sql from other code to make it cleaner and easier to read. Functions that interact with the database are written here and then exported to be used in the index.js file in the server folder.
+
 const db = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASS,
   database: process.env.DATABASE,
-  port: process.env.PORT,
+  port: process.env.DB_DOCK,
   multipleStatements: true,
 });
 

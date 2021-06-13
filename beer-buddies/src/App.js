@@ -19,6 +19,7 @@ import UserCard from "./Components/bodyComps/userCard/userCard";
 import AdminMenu from "./Admin/adminMenu";
 import AdminAddUserType from "./Admin/adminAddUserType";
 import AdminEditUser from "./Admin/adminEditUser";
+import Help from "./Help/help";
 
 function App() {
   const [loginStatus, setLoginStatus] = useState(false);
@@ -145,6 +146,7 @@ function App() {
         )}
         <Route path="/difficulty" render={() => <ChooseDifficulty />}></Route>
         <Route path="/easy" render={() => <Easy />}></Route>
+        <Route path="/help" render={() => <Help />}></Route>
         {loaded ? (
           <Route
             path="/register"
