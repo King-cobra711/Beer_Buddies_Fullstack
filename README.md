@@ -16,7 +16,7 @@ The project is the creation of the ‘Beer Buddies’ game. The game is essentia
 - DB_USER=beerAdmin (Your User for MAMP/MySQL)
 - DB_PASS=VzjCTh0terHVarXP (The password for the above user)
 - DATABASE=Beer_Buddies (Name of database)
-- PORT=8889
+- DB_DOCK=8889
 - SESSION_SECRET=LDpFx23F8!!dCnwi$w
 - SESSION_TIMEOUT=3600000
 
