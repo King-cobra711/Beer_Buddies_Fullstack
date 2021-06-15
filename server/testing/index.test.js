@@ -63,3 +63,49 @@ describe("Successful retrieval of user's scores", () => {
     done();
   });
 });
+describe("Successful update of user's Easy score", () => {
+  test("Should respond with a 200 status code", async (done) => {
+    const res = await request
+      .post("/UpdateEasyScore")
+      .set("Cookie", cookie)
+      .send({
+        id: 43,
+        score: 10,
+      });
+    expect(res.status).toBe(200);
+    done();
+  });
+});
+describe("Successful update of user's Medium score", () => {
+  test("Should respond with a 200 status code", async (done) => {
+    const res = await request
+      .post("/UpdateMediumScore")
+      .set("Cookie", cookie)
+      .send({
+        id: 43,
+        score: 15,
+      });
+    expect(res.status).toBe(200);
+    done();
+  });
+});
+describe("Successful update of user's Hard score", () => {
+  test("Should respond with a 200 status code", async (done) => {
+    const res = await request
+      .post("/UpdateHardScore")
+      .set("Cookie", cookie)
+      .send({
+        id: 43,
+        score: 20,
+      });
+    expect(res.status).toBe(200);
+    done();
+  });
+});
+describe("Successful retrieval of all user's scores", () => {
+  test("Should respond with a 200 status code", async (done) => {
+    const res = await request.post("/scores").set("Cookie", cookie).send({});
+    expect(res.status).toBe(200);
+    done();
+  });
+});

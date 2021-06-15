@@ -684,7 +684,12 @@ app.post("/AdminUpdateUser", (req, res) => {
 });
 
 app.get("/Whitelist", (req, res) => {
-  let whitelist = ["::1", "::ffff:127.0.0.1", process.env.ipadmin];
+  let whitelist = [
+    "::1",
+    "::ffff:127.0.0.1",
+    "172.20.10.7",
+    process.env.ipadmin,
+  ];
   let address = req.ip;
   let check = whitelist.includes(address);
   if (req.session.user.UserType_ID === 1) {
