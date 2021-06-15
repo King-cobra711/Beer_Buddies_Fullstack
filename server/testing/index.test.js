@@ -102,9 +102,16 @@ describe("Successful update of user's Hard score", () => {
     done();
   });
 });
-describe("Successful retrieval of all user's scores", () => {
+describe("Successful retrieval of all user types", () => {
   test("Should respond with a 200 status code", async (done) => {
-    const res = await request.post("/scores").set("Cookie", cookie).send({});
+    const res = await request.post("UserTypes").set("Cookie", cookie).send({});
+    expect(res.status).toBe(200);
+    done();
+  });
+});
+describe("Successful retrieval of Whitelist arrays", () => {
+  test("Should respond with a 200 status code", async (done) => {
+    const res = await request.post("/Whitelist").set("Cookie", cookie).send({});
     expect(res.status).toBe(200);
     done();
   });
